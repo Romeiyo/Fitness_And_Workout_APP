@@ -24,14 +24,14 @@ class WorkoutTile extends StatelessWidget {
 
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(20),
         image: DecorationImage(
           fit: BoxFit.cover,
           image: AssetImage(image),
         ),
         boxShadow: [
           BoxShadow(
-            color: colorScheme.shadow.withValues(alpha: 0.08),
+            color: Colors.black87,
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -52,7 +52,7 @@ class WorkoutTile extends StatelessWidget {
             children: [
               Text(
                 exercise,
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   foreground: Paint()
                       ..style = PaintingStyle.stroke
                       ..strokeWidth = 4
@@ -61,7 +61,7 @@ class WorkoutTile extends StatelessWidget {
               ),
               Text(
                   exercise,
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
