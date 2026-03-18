@@ -20,10 +20,6 @@ A mobile application built with Flutter to help users discover and track various
 - **Interactive UI**: Add new workout categories with the floating action button
 - **Search & Profile**: Placeholder icons for future search and user profile features
 
-## Screenshots
-
-(Add screenshots of your app here)
-
 ## Getting Started
 
 ### Prerequisites
