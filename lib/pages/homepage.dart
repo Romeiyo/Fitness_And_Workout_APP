@@ -28,7 +28,6 @@ class HomePage extends StatefulWidget {
    @override
    Widget build(BuildContext context) {
      return Scaffold(
-
        appBar: AppBar(
          flexibleSpace: Container(
            decoration: const BoxDecoration(
@@ -52,6 +51,64 @@ class HomePage extends StatefulWidget {
          child: Column(
            crossAxisAlignment: CrossAxisAlignment.start,
            children: [
+             Container(
+              
+              height: MediaQuery.of(context).size.height/5,
+              width: MediaQuery.of(context).size.width,
+
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                image: DecorationImage(
+                  image: AssetImage('assets/day.jpg'),
+                  fit: BoxFit.cover,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black,
+                    blurRadius: 8,
+                    offset: const Offset(0, 2)
+                  )
+                ]
+              ),
+
+              child: 
+                  Stack(
+                    children: [
+                      Center(
+                        child: Text(
+                          'Featured Workout of the Day',
+                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            foreground: Paint()
+                              ..style = PaintingStyle.stroke
+                              ..strokeWidth = 4
+                              ..color = Colors.white70,                        
+                          ),
+                        ),
+                      ),
+                      Center(
+                        child: Text(
+                          'Featured Workout of the Day',
+                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black
+                          ),
+                        ),
+                      ),
+
+                      Positioned(
+                        bottom: MediaQuery.of(context).size.width * 0.01,
+                        right: MediaQuery.of(context).size.width * 0.02,
+                        child: FloatingActionButton.small(
+                          onPressed: () {},
+                          child: Text('Start'),
+                        ),
+                      ),
+                    ]
+                  ), 
+             ),
+
+             SizedBox(height: 5,),
+
              Text(optionalMessage ?? 'Welcome to the Fitness App Random User...'),
 
              const SizedBox(height: 5,),
