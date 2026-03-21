@@ -10,9 +10,6 @@ class WorkoutTile extends StatelessWidget {
     required this.image,
   });
 
-
-
-
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;

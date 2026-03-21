@@ -1,3 +1,4 @@
+import 'package:fitness_app/routes/routes.dart';
 import 'package:fitness_app/widgets/workout_tile.dart';
 import 'package:flutter/material.dart';
 
@@ -37,8 +38,10 @@ class HomePage extends StatefulWidget {
          title: const Text(appName),
          leading: const Icon(Icons.fitness_center),
          actions: [
-           IconButton(onPressed: () {},
-             icon: Icon(Icons.search),
+           IconButton(onPressed: () {
+            Navigator.of(context).pushNamed(RouteManager.bmiCalculator);
+           },
+             icon: Icon(Icons.calculate),
            ),
            IconButton(onPressed: () {},
              icon: Icon(Icons.person),
