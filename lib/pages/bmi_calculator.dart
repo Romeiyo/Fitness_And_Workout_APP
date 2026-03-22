@@ -137,6 +137,12 @@ class _BmiCalculatorState extends State<BmiCalculator> {
                 unit: 'cm',
                 controller: _heightController,
                 hintText: 'Enter height in centimeters (e.g., 175)',
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty){
+                    return "Please enter your height";
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 20),
               
@@ -146,6 +152,12 @@ class _BmiCalculatorState extends State<BmiCalculator> {
                 unit: 'kg',
                 controller: _weightController,
                 hintText: 'Enter weight in kilograms (e.g., 70.5)',
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty){
+                    return "Please enter your weight";
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 20),
               

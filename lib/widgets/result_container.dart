@@ -17,13 +17,6 @@ class ResultContainer extends StatelessWidget {
     return Colors.red;
   }
   
-  // Color _getCategoryLightColor() {
-  //   if (bmi < 18.5) return Colors.blue.shade50;
-  //   if (bmi < 25) return Colors.green.shade50;
-  //   if (bmi < 30) return Colors.orange.shade50;
-  //   return Colors.red.shade50;
-  // }
-  
   String _getAdvice() {
     if (bmi < 18.5) {
       return 'You are underweight. Consider consulting a healthcare provider for a healthy weight gain plan.';

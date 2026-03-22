@@ -6,6 +6,7 @@ class InputContainer extends StatelessWidget {
   final String unit;
   final TextEditingController controller;
   final String hintText;
+  final String? Function(String?)? validator;
   
   const InputContainer({
     super.key,
@@ -14,6 +15,7 @@ class InputContainer extends StatelessWidget {
     required this.unit,
     required this.controller,
     required this.hintText,
+    this.validator,
   });
   
   @override
@@ -54,7 +56,7 @@ class InputContainer extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12),
-            TextField(
+            TextFormField(
               controller: controller,
               keyboardType: TextInputType.numberWithOptions(decimal: true),
               decoration: InputDecoration(
@@ -68,6 +70,7 @@ class InputContainer extends StatelessWidget {
                   fontWeight: FontWeight.w500,
                 ),
               ),
+              validator: validator,
             ),
           ],
         ),
