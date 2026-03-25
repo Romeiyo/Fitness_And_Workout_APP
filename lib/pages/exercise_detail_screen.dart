@@ -18,10 +18,8 @@ class ExerciseDetailScreen extends StatelessWidget {
     required this.weight,
   });
   
-  // Calculate total volume: sets × reps × weight
   double get totalVolume => sets * reps * weight;
   
-  // Get color for muscle group (matching your MyExercisesPage)
   Color _getMuscleGroupColor() {
     switch (muscleGroup.toLowerCase()) {
       case 'chest':
@@ -55,7 +53,6 @@ class ExerciseDetailScreen extends StatelessWidget {
     }
   }
   
-  // Get icon for muscle group
   IconData _getMuscleGroupIcon() {
     switch (muscleGroup.toLowerCase()) {
       case 'chest':
@@ -92,7 +89,6 @@ class ExerciseDetailScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Exercise Header with Icon (using custom container styling)
             Container(
               padding: const EdgeInsets.all(30),
               decoration: BoxDecoration(
@@ -133,7 +129,6 @@ class ExerciseDetailScreen extends StatelessWidget {
             
             const SizedBox(height: 24),
             
-            // Muscle Group Information (using InputContainer style)
             Container(
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -195,7 +190,6 @@ class ExerciseDetailScreen extends StatelessWidget {
             
             const SizedBox(height: 24),
             
-            // Metrics Grid using MetricCard widget
             Row(
               children: [
                 Expanded(
@@ -230,7 +224,6 @@ class ExerciseDetailScreen extends StatelessWidget {
             
             const SizedBox(height: 24),
             
-            // Total Volume Result (using ResultContainer style)
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -284,7 +277,6 @@ class ExerciseDetailScreen extends StatelessWidget {
             
             const SizedBox(height: 24),
             
-            // Pro Tip using CustomButton style but as info card
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
@@ -312,7 +304,6 @@ class ExerciseDetailScreen extends StatelessWidget {
             
             const SizedBox(height: 24),
             
-            // Action Buttons using CustomButton
             Row(
               children: [
                 Expanded(
@@ -334,7 +325,6 @@ class ExerciseDetailScreen extends StatelessWidget {
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
-                      // Navigate back
                       Navigator.pop(context);
                     },
                     child: Container(

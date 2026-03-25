@@ -1,3 +1,4 @@
+import 'package:fitness_app/models/exercise.dart';
 import 'package:fitness_app/widgets/custom_button.dart';
 import 'package:fitness_app/widgets/exercise_input_field.dart';
 import 'package:flutter/material.dart';
@@ -41,15 +42,17 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
   
   void _submitForm() {
     if (_formKey.currentState!.validate() && _selectedMuscleGroup != null) {
-      final exerciseData = {
-        'name': _nameController.text.trim(),
-        'sets': int.parse(_setsController.text),
-        'reps': int.parse(_repsController.text),
-        'weight': double.parse(_weightController.text),
-        'muscleGroup': _selectedMuscleGroup,
-      };
+      // Create Exercise object instead of Map
+      final exercise = Exercise(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        name: _nameController.text.trim(),
+        sets: int.parse(_setsController.text),
+        reps: int.parse(_repsController.text),
+        weight: double.parse(_weightController.text),
+        muscleGroup: _selectedMuscleGroup!,
+      );
       
-      Navigator.pop(context, exerciseData);
+      Navigator.pop(context, exercise);
     } else if (_selectedMuscleGroup == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -231,10 +234,10 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
     
     if (_sets != null && _reps != null && _weight != null) {
       double volume = _sets! * _reps! * _weight!;
-      volumeText = '${_sets!} × ${_reps!} × ${_weight!.toStringAsFixed(1)} = ${volume.toStringAsFixed(1)} kg';
+      volumeText = '${_sets!} x ${_reps!} x ${_weight!.toStringAsFixed(1)} = ${volume.toStringAsFixed(1)} kg';
       textColor = Colors.green;
     } else {
-      volumeText = '-- × -- × -- = -- kg';
+      volumeText = '-- x -- x -- = -- kg';
       textColor = Colors.grey;
     }
     

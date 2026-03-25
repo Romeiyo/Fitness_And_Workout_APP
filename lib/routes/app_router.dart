@@ -1,3 +1,4 @@
+import 'package:fitness_app/models/exercise.dart';
 import 'package:fitness_app/pages/exercise_detail_screen.dart';
 import 'package:fitness_app/pages/exercise_list_screen.dart';
 import 'package:flutter/material.dart';
@@ -34,15 +35,23 @@ class ExerciseDetailArgs {
   });
 }
 
+class MyExercisesArgs {
+  final VoidCallback onAddExercise;
+
+  const MyExercisesArgs({
+    required this.onAddExercise,
+  });
+}
+
 enum AppRoute<T> {
   home<void>(),
   bmiCalculator<void>(),
-  addExercise<Map<String, dynamic>?>(),
+  addExercise<Exercise?>(),
   
   exerciseList<ExerciseListArgs>(),
   exerciseDetail<ExerciseDetailArgs>(),
   
-  myExercises<Map<String, dynamic>?>();
+  myExercises<MyExercisesArgs>();
 
   const AppRoute();
 
@@ -54,9 +63,7 @@ enum AppRoute<T> {
         AppRoute.bmiCalculator => const BmiCalculator(),
         AppRoute.addExercise => const AddExerciseScreen(),
         AppRoute.myExercises => MyExercisesPage(
-          exercises: (args as Map<String, dynamic>?)?['exercises'] ?? [],
-          onDeleteExercise: (args as Map<String, dynamic>?)?['onDelete'] ?? (_) {},
-          onAddExercise: (args as Map<String, dynamic>?)?['onAdd'] ?? () {},
+          onAddExercise: (args as MyExercisesArgs).onAddExercise,
         ),
         AppRoute.exerciseList => ExerciseListScreen(
           categoryName: (args as ExerciseListArgs).categoryName,
@@ -80,7 +87,7 @@ extension AppNavigator on NavigatorState {
     return push(route.route(null)).then((result) => result as R?);
   }
 
-  Future<R?> pushRouteWithArgs<R, T>(AppRoute<T> route, T args) {
-    return push<R>(route.route(args) as Route<R>);
+  Future<T?> pushRouteWithArgs<T>(AppRoute<T> route, T args) {
+    return push<T?>(route.route(args) as Route<T?>);
   }
 }
