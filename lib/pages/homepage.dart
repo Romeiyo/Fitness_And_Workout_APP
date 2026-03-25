@@ -1,6 +1,9 @@
 import 'package:fitness_app/routes/app_router.dart';
 import 'package:fitness_app/widgets/workout_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../models/exercise.dart';
+import '../providers/routine_provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,9 +16,6 @@ class _HomePageState extends State<HomePage> {
   static const String appName = "Fitness & Workout Tracker";
   String? optionalMessage;
 
-  List<Map<String, dynamic>> userExercises = [];
-
-  // Updated workout categories with colors and icons for type-safe navigation
   final List<Map<String, dynamic>> workoutCategories = [
     {
       'exercise': 'Aerobic Exercises',
@@ -74,37 +74,22 @@ class _HomePageState extends State<HomePage> {
   ];
 
   Future<void> _addCustomExercise() async {
-    final result = await Navigator.of(context).pushRoute<Map<String, dynamic>?>(
+    final result = await Navigator.of(context).pushRouteWithArgs<Exercise?>(
       AppRoute.addExercise,
+      null,
     );
 
     if (result != null) {
-      setState(() {
-        userExercises.add(result);
-      });
-
+      context.read<RoutineProvider>().addExercise(result);
+      
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('${result['name']} added successfully!'),
+          content: Text('${result.name} added successfully!'),
           backgroundColor: Colors.green,
           duration: const Duration(seconds: 2),
         ),
       );
     }
-  }
-
-  void _deleteExercise(Map<String, dynamic> exercise) {
-    setState(() {
-      userExercises.remove(exercise);
-    });
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('${exercise['name']} removed'),
-        backgroundColor: Colors.orange,
-        duration: const Duration(seconds: 1),
-      ),
-    );
   }
 
   @override
@@ -123,7 +108,6 @@ class _HomePageState extends State<HomePage> {
         actions: [
           IconButton(
             onPressed: () {
-              // Type-safe navigation to BMI Calculator
               Navigator.of(context).pushRoute(AppRoute.bmiCalculator);
             },
             icon: const Icon(Icons.calculate),
@@ -131,16 +115,15 @@ class _HomePageState extends State<HomePage> {
           ),
           IconButton(
             onPressed: () {
-              // Type-safe navigation to My Exercises with arguments
-              final args = {
-                'exercises': userExercises,
-                'onDelete': _deleteExercise,
-                'onAdd': _addCustomExercise,
-              };
-              Navigator.of(context).pushRouteWithArgs(AppRoute.myExercises, args);
+              Navigator.of(context).pushRouteWithArgs(
+                AppRoute.myExercises,
+                MyExercisesArgs(
+                  onAddExercise: _addCustomExercise,
+                ),
+              );
             },
-            icon: const Icon(Icons.list),
-            tooltip: 'My Exercises',
+            icon: const Icon(Icons.favorite),
+            tooltip: 'My Saved Exercises',
           ),
         ],
       ),
@@ -234,7 +217,6 @@ class _HomePageState extends State<HomePage> {
                       final category = workoutCategories[index];
                       return GestureDetector(
                         onTap: () {
-                          // Type-safe navigation to Exercise List
                           Navigator.of(context).pushRouteWithArgs(
                             AppRoute.exerciseList,
                             ExerciseListArgs(

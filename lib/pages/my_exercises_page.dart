@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/routine_provider.dart';
 
 class MyExercisesPage extends StatelessWidget {
-  final List<Map<String, dynamic>> exercises;
-  final Function(Map<String, dynamic>) onDeleteExercise;
   final VoidCallback onAddExercise;
   
   const MyExercisesPage({
     super.key,
-    required this.exercises,
-    required this.onDeleteExercise,
     required this.onAddExercise,
   });
   
@@ -50,11 +48,44 @@ class MyExercisesPage extends StatelessWidget {
     }
   }
   
+  void _showClearAllDialog(BuildContext context, RoutineProvider provider) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Clear All Exercises'),
+        content: const Text(
+          'Are you sure you want to remove all saved exercises? This action cannot be undone.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              provider.clearAllExercises();
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('All exercises cleared'),
+                  duration: Duration(seconds: 1),
+                  backgroundColor: Colors.orange,
+                ),
+              );
+            },
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text('Clear All'),
+          ),
+        ],
+      ),
+    );
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Custom Exercises'),
+        title: const Text('My Saved Exercises'),
         backgroundColor: Colors.greenAccent,
         actions: [
           IconButton(
@@ -62,21 +93,37 @@ class MyExercisesPage extends StatelessWidget {
             icon: const Icon(Icons.add),
             tooltip: 'Add Exercise',
           ),
+          Consumer<RoutineProvider>(
+            builder: (context, provider, child) {
+              if (provider.exerciseCount > 0) {
+                return IconButton(
+                  onPressed: () => _showClearAllDialog(context, provider),
+                  icon: const Icon(Icons.delete_sweep),
+                  tooltip: 'Clear All',
+                );
+              }
+              return const SizedBox.shrink();
+            },
+          ),
         ],
       ),
-      body: exercises.isEmpty
-          ? Center(
+      body: Consumer<RoutineProvider>(
+        builder: (context, provider, child) {
+          final exercises = provider.savedExercises;
+          
+          if (exercises.isEmpty) {
+            return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
-                    Icons.fitness_center,
+                    Icons.favorite_border,
                     size: 80,
                     color: Colors.grey.shade400,
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'No Exercises Added',
+                    'No Saved Exercises',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
@@ -85,7 +132,7 @@ class MyExercisesPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Tap the + button to add your first custom exercise',
+                    'Tap the heart button on any exercise to save it here',
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.grey.shade600,
@@ -95,7 +142,7 @@ class MyExercisesPage extends StatelessWidget {
                   ElevatedButton.icon(
                     onPressed: onAddExercise,
                     icon: const Icon(Icons.add),
-                    label: const Text('Add Exercise'),
+                    label: const Text('Add Custom Exercise'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
@@ -103,98 +150,111 @@ class MyExercisesPage extends StatelessWidget {
                   ),
                 ],
               ),
-            )
-          : ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: exercises.length,
-              itemBuilder: (context, index) {
-                final exercise = exercises[index];
-                final totalVolume = exercise['sets'] * exercise['reps'] * (exercise['weight'] as double).toInt();
-                final muscleGroup = exercise['muscleGroup'] as String?;
-                final iconColor = _getExerciseColor(muscleGroup);
-                
-                return Container(
-                  margin: const EdgeInsets.only(bottom: 12),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.grey.shade300),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.shade300,
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
+            );
+          }
+          
+          return ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: exercises.length,
+            itemBuilder: (context, index) {
+              final exercise = exercises[index];
+              final totalVolume = exercise.volume;
+              final muscleGroup = exercise.muscleGroup;
+              final iconColor = _getExerciseColor(muscleGroup);
+              
+              return Container(
+                margin: const EdgeInsets.only(bottom: 12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.grey.shade300),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.shade300,
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: iconColor,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Icon(
+                          _getExerciseIcon(muscleGroup),
+                          color: Colors.white,
+                          size: 28,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              exercise.name,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              '${exercise.sets} sets x ${exercise.reps} reps x ${exercise.weight.toStringAsFixed(1)} kg',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey.shade700,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Total Volume: ${totalVolume.toStringAsFixed(1)} kg',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: iconColor,
+                              ),
+                            ),
+                            if (muscleGroup.isNotEmpty) ...[
+                              const SizedBox(height: 4),
+                              Text(
+                                'Target: $muscleGroup',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey.shade600,
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.delete_outline, color: Colors.red),
+                        onPressed: () {
+                          provider.removeExercise(exercise.id);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Removed ${exercise.name}'),
+                              duration: const Duration(seconds: 1),
+                              backgroundColor: Colors.orange,
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: iconColor,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Icon(
-                            _getExerciseIcon(muscleGroup),
-                            color: iconColor,
-                            size: 28,
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                exercise['name'],
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                '${exercise['sets']} sets × ${exercise['reps']} reps × ${exercise['weight']} kg',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey.shade700,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                'Total Volume: $totalVolume kg',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  color: iconColor,
-                                ),
-                              ),
-                              if (muscleGroup != null) ...[
-                                const SizedBox(height: 4),
-                                Text(
-                                  'Target: $muscleGroup',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.grey.shade600,
-                                  ),
-                                ),
-                              ],
-                            ],
-                          ),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.delete_outline, color: Colors.red),
-                          onPressed: () => onDeleteExercise(exercise),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }
