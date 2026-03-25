@@ -1,6 +1,4 @@
-import 'package:fitness_app/pages/add_exercise_screen.dart';
-import 'package:fitness_app/pages/my_exercises_page.dart';
-import 'package:fitness_app/routes/routes.dart';
+import 'package:fitness_app/routes/app_router.dart';
 import 'package:fitness_app/widgets/workout_tile.dart';
 import 'package:flutter/material.dart';
 
@@ -17,22 +15,67 @@ class _HomePageState extends State<HomePage> {
 
   List<Map<String, dynamic>> userExercises = [];
 
-  final List<Map<String, String>> workoutCategories = [
-    {'exercise': 'Aerobic Exercises', 'image': 'assets/aerobic.jpg'},
-    {'exercise': 'Balance Exercises', 'image': 'assets/balance.jpg'},
-    {'exercise': 'Cardio Exercises', 'image': 'assets/cardio.jpg'},
-    {'exercise': 'Flexibility Exercises', 'image': 'assets/flexibility.jpg'},
-    {'exercise': 'Mobility Training', 'image': 'assets/mobility.jpg'},
-    {'exercise': 'Strength Workout', 'image': 'assets/strength.jpg'},
-    {'exercise': 'Stretching Exercises', 'image': 'assets/stretching.jpg'},
-    {'exercise': 'Warm-Up Exercises', 'image': 'assets/warmup.jpg'},
-    {'exercise': 'Yoga Exercises', 'image': 'assets/yoga.jpg'},
+  // Updated workout categories with colors and icons for type-safe navigation
+  final List<Map<String, dynamic>> workoutCategories = [
+    {
+      'exercise': 'Aerobic Exercises',
+      'image': 'assets/aerobic.jpg',
+      'color': Colors.orange,
+      'icon': Icons.directions_run,
+    },
+    {
+      'exercise': 'Balance Exercises',
+      'image': 'assets/balance.jpg',
+      'color': Colors.purple,
+      'icon': Icons.accessibility_new,
+    },
+    {
+      'exercise': 'Cardio Exercises',
+      'image': 'assets/cardio.jpg',
+      'color': Colors.red,
+      'icon': Icons.favorite,
+    },
+    {
+      'exercise': 'Flexibility Exercises',
+      'image': 'assets/flexibility.jpg',
+      'color': Colors.green,
+      'icon': Icons.self_improvement,
+    },
+    {
+      'exercise': 'Mobility Training',
+      'image': 'assets/mobility.jpg',
+      'color': Colors.teal,
+      'icon': Icons.airline_seat_recline_normal,
+    },
+    {
+      'exercise': 'Strength Workout',
+      'image': 'assets/strength.jpg',
+      'color': Colors.blue,
+      'icon': Icons.fitness_center,
+    },
+    {
+      'exercise': 'Stretching Exercises',
+      'image': 'assets/stretching.jpg',
+      'color': Colors.lightGreen,
+      'icon': Icons.linear_scale,
+    },
+    {
+      'exercise': 'Warm-Up Exercises',
+      'image': 'assets/warmup.jpg',
+      'color': Colors.amber,
+      'icon': Icons.whatshot,
+    },
+    {
+      'exercise': 'Yoga Exercises',
+      'image': 'assets/yoga.jpg',
+      'color': Colors.indigo,
+      'icon': Icons.spa,
+    },
   ];
 
   Future<void> _addCustomExercise() async {
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const AddExerciseScreen()),
+    final result = await Navigator.of(context).pushRoute<Map<String, dynamic>?>(
+      AppRoute.addExercise,
     );
 
     if (result != null) {
@@ -70,7 +113,9 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         flexibleSpace: Container(
           decoration: const BoxDecoration(
-            gradient: LinearGradient(colors: [Colors.lightGreenAccent, Colors.lightBlueAccent]),
+            gradient: LinearGradient(
+              colors: [Colors.lightGreenAccent, Colors.lightBlueAccent],
+            ),
           ),
         ),
         title: const Text(appName),
@@ -78,23 +123,21 @@ class _HomePageState extends State<HomePage> {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.of(context).pushNamed(RouteManager.bmiCalculator);
+              // Type-safe navigation to BMI Calculator
+              Navigator.of(context).pushRoute(AppRoute.bmiCalculator);
             },
             icon: const Icon(Icons.calculate),
             tooltip: 'BMI Calculator',
           ),
           IconButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MyExercisesPage(
-                    exercises: userExercises,
-                    onDeleteExercise: _deleteExercise,
-                    onAddExercise: _addCustomExercise,
-                  ),
-                ),
-              );
+              // Type-safe navigation to My Exercises with arguments
+              final args = {
+                'exercises': userExercises,
+                'onDelete': _deleteExercise,
+                'onAdd': _addCustomExercise,
+              };
+              Navigator.of(context).pushRouteWithArgs(AppRoute.myExercises, args);
             },
             icon: const Icon(Icons.list),
             tooltip: 'My Exercises',
@@ -188,10 +231,23 @@ class _HomePageState extends State<HomePage> {
                       childAspectRatio: 0.85,
                     ),
                     itemBuilder: (context, index) {
-                      final train = workoutCategories[index];
-                      return WorkoutTile(
-                        exercise: train['exercise']!,
-                        image: train['image']!,
+                      final category = workoutCategories[index];
+                      return GestureDetector(
+                        onTap: () {
+                          // Type-safe navigation to Exercise List
+                          Navigator.of(context).pushRouteWithArgs(
+                            AppRoute.exerciseList,
+                            ExerciseListArgs(
+                              categoryName: category['exercise'],
+                              themeColor: category['color'],
+                              iconData: category['icon'],
+                            ),
+                          );
+                        },
+                        child: WorkoutTile(
+                          exercise: category['exercise'],
+                          image: category['image'],
+                        ),
                       );
                     },
                   );
@@ -204,6 +260,7 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: _addCustomExercise,
         tooltip: 'Add Custom Exercise',
+        heroTag: null,
         child: const Icon(Icons.add),
       ),
     );
