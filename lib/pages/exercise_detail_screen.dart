@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fitness_app/routes/app_router.dart';
 import 'package:fitness_app/widgets/custom_button.dart';
 import 'package:fitness_app/widgets/metric_card.dart';
 
@@ -325,7 +326,7 @@ class ExerciseDetailScreen extends StatelessWidget {
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.pop(context);
+                      context.pop();
                     },
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 16),

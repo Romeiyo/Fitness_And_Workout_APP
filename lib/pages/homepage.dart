@@ -75,12 +75,11 @@ class _HomePageState extends State<HomePage> {
   ];
 
   Future<void> _addCustomExercise() async {
-    final result = await Navigator.of(context).pushRouteWithArgs<Exercise?>(
+    final result = await context.pushRoute<Exercise?>(
       AppRoute.addExercise,
-      null,
     );
 
-    if (result != null) {
+    if (result != null && mounted) {
       context.read<RoutineProvider>().addExercise(result);
       
       ScaffoldMessenger.of(context).showSnackBar(
@@ -108,6 +107,8 @@ class _HomePageState extends State<HomePage> {
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [Colors.lightGreenAccent, Colors.lightBlueAccent],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
           ),
         ),
@@ -116,25 +117,21 @@ class _HomePageState extends State<HomePage> {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.of(context).pushRoute(AppRoute.bmiCalculator);
+              context.pushRoute(AppRoute.bmiCalculator);
             },
             icon: const Icon(Icons.calculate),
             tooltip: 'BMI Calculator',
           ),
           IconButton(
             onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const SettingsProfileScreen(),
-                ),
-              );
+              context.pushRoute(AppRoute.settings);
             },
             icon: const Icon(Icons.settings),
             tooltip: 'Settings & Profile',
           ),
           IconButton(
             onPressed: () {
-              Navigator.of(context).pushRouteWithArgs(
+              context.pushRouteWithArgs(
                 AppRoute.myExercises,
                 MyExercisesArgs(
                   onAddExercise: _addCustomExercise,
@@ -306,7 +303,7 @@ class _HomePageState extends State<HomePage> {
                       final category = workoutCategories[index];
                       return GestureDetector(
                         onTap: () {
-                          Navigator.of(context).pushRouteWithArgs(
+                          context.pushRouteWithArgs(
                             AppRoute.exerciseList,
                             ExerciseListArgs(
                               categoryName: category['exercise'],
@@ -331,7 +328,7 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: _addCustomExercise,
         tooltip: 'Add Custom Exercise',
-        heroTag: null,
+        heroTag: 'add_exercise_fab',
         child: const Icon(Icons.add),
       ),
     );

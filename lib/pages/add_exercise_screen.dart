@@ -1,4 +1,5 @@
 import 'package:fitness_app/models/exercise.dart';
+import 'package:fitness_app/routes/app_router.dart';
 import 'package:fitness_app/widgets/custom_button.dart';
 import 'package:fitness_app/widgets/exercise_input_field.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +53,7 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
         muscleGroup: _selectedMuscleGroup!,
       );
       
-      Navigator.pop(context, exercise);
+      context.pop(exercise);
     } else if (_selectedMuscleGroup == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
