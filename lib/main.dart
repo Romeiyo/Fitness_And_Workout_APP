@@ -1,4 +1,5 @@
 import 'package:fitness_app/pages/homepage.dart';
+import 'package:fitness_app/providers/profile_provider.dart';
 import 'package:fitness_app/providers/routine_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,12 +13,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => RoutineProvider(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => RoutineProvider()),
+        ChangeNotifierProvider(create: (context) => ProfileProvider()),
+      ],
       child: MaterialApp(
         title: 'Fitness App',
         theme: ThemeData(
-          colorScheme: .fromSeed(seedColor: Colors.lightGreenAccent),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightGreenAccent),
         ),
         debugShowCheckedModeBanner: true,
         home: const HomePage(),

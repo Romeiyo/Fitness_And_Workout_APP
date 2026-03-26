@@ -1,3 +1,5 @@
+import 'package:fitness_app/providers/profile_provider.dart';
+import 'package:fitness_app/pages/settings_profile_screen.dart';
 import 'package:fitness_app/routes/app_router.dart';
 import 'package:fitness_app/widgets/workout_tile.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +16,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   static const String appName = "Fitness & Workout Tracker";
-  String? optionalMessage;
 
   final List<Map<String, dynamic>> workoutCategories = [
     {
@@ -92,6 +93,13 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  String _getGreeting(String name) {
+    if (name == 'Guest' || name.isEmpty) {
+      return 'Welcome!';
+    }
+    return 'Welcome back, $name!';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -115,6 +123,17 @@ class _HomePageState extends State<HomePage> {
           ),
           IconButton(
             onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const SettingsProfileScreen(),
+                ),
+              );
+            },
+            icon: const Icon(Icons.settings),
+            tooltip: 'Settings & Profile',
+          ),
+          IconButton(
+            onPressed: () {
               Navigator.of(context).pushRouteWithArgs(
                 AppRoute.myExercises,
                 MyExercisesArgs(
@@ -132,6 +151,76 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Greeting Card with Profile Info
+            Consumer<ProfileProvider>(
+              builder: (context, profileProvider, child) {
+                return Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Colors.green.shade400, Colors.lightGreen.shade400],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 8,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(Icons.person, color: Colors.white, size: 28),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              _getGreeting(profileProvider.name),
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      if (profileProvider.weightGoal > 0) ...[
+                        const SizedBox(height: 12),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.flag, color: Colors.white, size: 16),
+                              const SizedBox(width: 6),
+                              Text(
+                                'Goal: ${profileProvider.weightGoal.toStringAsFixed(1)} ${profileProvider.weightUnit}',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 16),
+            
             Container(
               height: MediaQuery.of(context).size.height / 5,
               width: MediaQuery.of(context).size.width,
@@ -183,7 +272,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             const SizedBox(height: 5),
-            Text(optionalMessage ?? 'Welcome to the Fitness App Random User...'),
+            Text('Welcome to the Fitness App!'),
             const SizedBox(height: 5),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

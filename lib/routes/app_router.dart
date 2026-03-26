@@ -1,6 +1,7 @@
 import 'package:fitness_app/models/exercise.dart';
 import 'package:fitness_app/pages/exercise_detail_screen.dart';
 import 'package:fitness_app/pages/exercise_list_screen.dart';
+import 'package:fitness_app/pages/settings_profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fitness_app/pages/homepage.dart';
 import 'package:fitness_app/pages/bmi_calculator.dart';
@@ -47,6 +48,8 @@ enum AppRoute<T> {
   home<void>(),
   bmiCalculator<void>(),
   addExercise<Exercise?>(),
+
+  settings<void>(),
   
   exerciseList<ExerciseListArgs>(),
   exerciseDetail<ExerciseDetailArgs>(),
@@ -62,6 +65,7 @@ enum AppRoute<T> {
         AppRoute.home => const HomePage(),
         AppRoute.bmiCalculator => const BmiCalculator(),
         AppRoute.addExercise => const AddExerciseScreen(),
+        AppRoute.settings => const SettingsProfileScreen(),
         AppRoute.myExercises => MyExercisesPage(
           onAddExercise: (args as MyExercisesArgs).onAddExercise,
         ),
