@@ -423,11 +423,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                               divisions: 19, // (300-15)/15 = 19 steps
                               label: _formatRestTimer(provider.restTimer),
                               onChanged: (double value) {
-                                // Update UI immediately without saving to disk
-                                // This is handled by the provider's internal variable
-                                // We need to temporarily update the value
-                                // For now, we'll use a separate state variable
-                                // Actually, let's use a local state for smooth dragging
+                                provider.updateRestTimerPreview(value.toInt());
                               },
                               onChangeEnd: (double value) {
                                 // Save only when dragging ends
@@ -543,3 +539,4 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
     );
   }
 }
+

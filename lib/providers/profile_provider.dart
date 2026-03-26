@@ -175,4 +175,10 @@ class ProfileProvider extends ChangeNotifier {
     
     notifyListeners();
   }
+
+  // Add this to ProfileProvider
+  void updateRestTimerPreview(int seconds) {
+    _restTimer = seconds.clamp(15, 300);
+    notifyListeners(); // UI updates without disk write
+  }
 }
