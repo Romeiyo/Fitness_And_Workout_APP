@@ -431,7 +431,7 @@ class ExerciseListScreen extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.of(context).pushRouteWithArgs(
+              context.pushRouteWithArgs(
                 AppRoute.myExercises,
                 MyExercisesArgs(
                   onAddExercise: () {},
@@ -513,7 +513,7 @@ class ExerciseListScreen extends StatelessWidget {
                           
                           return GestureDetector(
                             onTap: () {
-                              Navigator.of(context).pushRouteWithArgs(
+                              context.pushRouteWithArgs(
                                 AppRoute.exerciseDetail,
                                 ExerciseDetailArgs(
                                   exerciseName: exercise.name,

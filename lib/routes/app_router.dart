@@ -1,11 +1,14 @@
 import 'package:fitness_app/models/exercise.dart';
 import 'package:fitness_app/pages/exercise_detail_screen.dart';
 import 'package:fitness_app/pages/exercise_list_screen.dart';
+import 'package:fitness_app/pages/settings_profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fitness_app/pages/homepage.dart';
 import 'package:fitness_app/pages/bmi_calculator.dart';
 import 'package:fitness_app/pages/add_exercise_screen.dart';
 import 'package:fitness_app/pages/my_exercises_page.dart';
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 class ExerciseListArgs {
   final String categoryName;
@@ -43,10 +46,16 @@ class MyExercisesArgs {
   });
 }
 
+class NoArgs {
+  const NoArgs();
+}
+
 enum AppRoute<T> {
-  home<void>(),
-  bmiCalculator<void>(),
-  addExercise<Exercise?>(),
+  home<NoArgs>(),
+  bmiCalculator<NoArgs>(),
+  addExercise<NoArgs>(),
+
+  settings<NoArgs>(),
   
   exerciseList<ExerciseListArgs>(),
   exerciseDetail<ExerciseDetailArgs>(),
@@ -62,6 +71,7 @@ enum AppRoute<T> {
         AppRoute.home => const HomePage(),
         AppRoute.bmiCalculator => const BmiCalculator(),
         AppRoute.addExercise => const AddExerciseScreen(),
+        AppRoute.settings => const SettingsProfileScreen(),
         AppRoute.myExercises => MyExercisesPage(
           onAddExercise: (args as MyExercisesArgs).onAddExercise,
         ),
@@ -83,11 +93,25 @@ enum AppRoute<T> {
 }
 
 extension AppNavigator on NavigatorState {
-  Future<R?> pushRoute<R>(AppRoute<void> route) {
-    return push(route.route(null)).then((result) => result as R?);
+  Future<R?> pushRoute<R>(AppRoute<NoArgs> route) {
+    return push(route.route(const NoArgs())).then((result) => result as R?);
   }
 
-  Future<T?> pushRouteWithArgs<T>(AppRoute<T> route, T args) {
-    return push<T?>(route.route(args) as Route<T?>);
+  Future<void> pushRouteWithArgs<T>(AppRoute<T> route, T args) {
+    return push(route.route(args));
+  }
+}
+
+extension AppNavigatorContext on BuildContext {
+  Future<R?> pushRoute<R>(AppRoute<NoArgs> route) {
+    return Navigator.of(this).push(route.route(const NoArgs())).then((result) => result as R?);
+  }
+
+  Future<void> pushRouteWithArgs<T>(AppRoute<T> route, T args) {
+    return Navigator.of(this).push(route.route(args));
+  }
+
+  void pop<T extends Object?>([T? result]) {
+    Navigator.of(this).pop(result);
   }
 }
