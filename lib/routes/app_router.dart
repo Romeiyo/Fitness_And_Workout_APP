@@ -97,8 +97,8 @@ extension AppNavigator on NavigatorState {
     return push(route.route(const NoArgs())).then((result) => result as R?);
   }
 
-  Future<T?> pushRouteWithArgs<T>(AppRoute<T> route, T args) {
-    return push<T?>(route.route(args) as Route<T?>);
+  Future<void> pushRouteWithArgs<T>(AppRoute<T> route, T args) {
+    return push(route.route(args));
   }
 }
 
@@ -107,8 +107,8 @@ extension AppNavigatorContext on BuildContext {
     return Navigator.of(this).push(route.route(const NoArgs())).then((result) => result as R?);
   }
 
-  Future<T?> pushRouteWithArgs<T>(AppRoute<T> route, T args) {
-    return Navigator.of(this).push<T?>(route.route(args) as Route<T?>);
+  Future<void> pushRouteWithArgs<T>(AppRoute<T> route, T args) {
+    return Navigator.of(this).push(route.route(args));
   }
 
   void pop<T extends Object?>([T? result]) {
