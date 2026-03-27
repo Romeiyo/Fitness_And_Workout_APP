@@ -19,19 +19,7 @@ class Exercise {
 
   double get volume => sets * reps * weight;
 
-  factory Exercise.fromMap(Map<String, dynamic> map, {String? id}) {
-    return Exercise(
-      id: id ?? DateTime.now().millisecondsSinceEpoch.toString(),
-      name: map['name'] as String,
-      muscleGroup: map['muscleGroup'] as String,
-      sets: map['sets'] as int,
-      reps: map['reps'] as int,
-      weight: map['weight'] as double,
-      image: map['image'] as String?,
-    );
-  }
-
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
       'id': id,
       'name': name,
@@ -43,11 +31,43 @@ class Exercise {
     };
   }
 
+  factory Exercise.fromJson(Map<String, dynamic> json) {
+    return Exercise(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      muscleGroup: json['muscleGroup'] as String,
+      sets: json['sets'] as int,
+      reps: json['reps'] as int,
+      weight: json['weight'] as double,
+      image: json['image'] as String?,
+    );
+  }
+
+  Exercise copyWith({
+    String? id,
+    String? name,
+    String? muscleGroup,
+    int? sets,
+    int? reps,
+    double? weight,
+    String? image,
+  }) {
+    return Exercise(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      muscleGroup: muscleGroup ?? this.muscleGroup,
+      sets: sets ?? this.sets,
+      reps: reps ?? this.reps,
+      weight: weight ?? this.weight,
+      image: image ?? this.image,
+    );
+  }
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! Exercise) return false;
-    return id == other.id; 
+    return id == other.id;
   }
 
   @override
