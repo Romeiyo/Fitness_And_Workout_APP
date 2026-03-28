@@ -18,8 +18,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => RoutineProvider(),),
-        ChangeNotifierProvider(create: (context) => ProfileProvider(),),
+        ChangeNotifierProvider(create: (_) => RoutineProvider(RoutineRepository()),),
+        ChangeNotifierProvider(create: (_) => ProfileProvider(ProfileRepository()),),
       ],
       child: MaterialApp(
         title: 'Fitness App',
