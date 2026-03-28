@@ -1,6 +1,6 @@
-import 'package:fitness_app/widgets/custom_button.dart';
-import 'package:fitness_app/widgets/input_container.dart';
-import 'package:fitness_app/widgets/result_container.dart';
+import 'package:fitness_app/presentation/widgets/custom_button.dart';
+import 'package:fitness_app/presentation/widgets/input_container.dart';
+import 'package:fitness_app/presentation/widgets/result_container.dart';
 import 'package:flutter/material.dart';
 
 class BmiCalculator extends StatefulWidget {

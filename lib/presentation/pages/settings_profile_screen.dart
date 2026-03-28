@@ -1,4 +1,4 @@
-import 'package:fitness_app/providers/profile_provider.dart';
+import 'package:fitness_app/domain/profile_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -42,7 +42,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
       setState(() {
         _nameError = null;
       });
-      Provider.of<ProfileProvider>(context, listen: false).saveName(name);
+      Provider.of<ProfileProvider>(context, listen: false).updateName(name);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Name saved'),
@@ -59,7 +59,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
       setState(() {
         _ageError = null;
       });
-      Provider.of<ProfileProvider>(context, listen: false).saveAge(0);
+      Provider.of<ProfileProvider>(context, listen: false).updateAge(0);
       return;
     }
     
@@ -76,7 +76,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
       setState(() {
         _ageError = null;
       });
-      Provider.of<ProfileProvider>(context, listen: false).saveAge(age);
+      Provider.of<ProfileProvider>(context, listen: false).updateAge(age);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Age saved'),
@@ -93,7 +93,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
       setState(() {
         _weightGoalError = null;
       });
-      Provider.of<ProfileProvider>(context, listen: false).saveWeightGoal(0.0);
+      Provider.of<ProfileProvider>(context, listen: false).updateWeightGoal(0.0);
       return;
     }
     
@@ -110,7 +110,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
       setState(() {
         _weightGoalError = null;
       });
-      Provider.of<ProfileProvider>(context, listen: false).saveWeightGoal(weight);
+      Provider.of<ProfileProvider>(context, listen: false).updateWeightGoal(weight);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Weight goal saved'),
@@ -394,7 +394,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                           selected: {provider.weightUnit},
                           onSelectionChanged: (Set<String> selection) {
                             final newUnit = selection.first;
-                            provider.saveWeightUnit(newUnit);
+                            provider.updateWeightUnit(newUnit);
                           },
                         );
                       },
@@ -413,21 +413,20 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                     const SizedBox(height: 8),
                     Consumer<ProfileProvider>(
                       builder: (context, provider, child) {
-                        double currentValue = provider.restTimer.toDouble();
                         return Column(
                           children: [
                             Slider(
-                              value: currentValue,
+                              value: provider.restTimer.toDouble(),
                               min: 15,
                               max: 300,
                               divisions: 19, // (300-15)/15 = 19 steps
                               label: _formatRestTimer(provider.restTimer),
                               onChanged: (double value) {
-                                provider.updateRestTimerPreview(value.toInt());
+                                provider.previewRestTimer(value.toInt());
                               },
                               onChangeEnd: (double value) {
                                 // Save only when dragging ends
-                                provider.saveRestTimer(value.toInt());
+                                provider.updateRestTimer(value.toInt());
                               },
                             ),
                             Text(
@@ -458,7 +457,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                           subtitle: const Text('Receive workout reminders and tips'),
                           value: provider.notificationsEnabled,
                           onChanged: (bool value) {
-                            provider.saveNotificationsEnabled(value);
+                            provider.updateNotificationsEnabled(value);
                           },
                           activeThumbColor: Colors.green,
                           contentPadding: EdgeInsets.zero,

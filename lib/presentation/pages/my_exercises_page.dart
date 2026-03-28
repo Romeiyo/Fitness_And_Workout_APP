@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/routine_provider.dart';
+import '../../domain/routine_provider.dart';
 
 class MyExercisesPage extends StatelessWidget {
   final VoidCallback onAddExercise;
@@ -62,8 +62,8 @@ class MyExercisesPage extends StatelessWidget {
             child: const Text('Cancel'),
           ),
           TextButton(
-            onPressed: () {
-              provider.clearAllExercises();
+            onPressed: () async {
+              await provider.clearAllExercises();
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
@@ -236,8 +236,8 @@ class MyExercisesPage extends StatelessWidget {
                       ),
                       IconButton(
                         icon: const Icon(Icons.delete_outline, color: Colors.red),
-                        onPressed: () {
-                          provider.removeExercise(exercise.id);
+                        onPressed: () async {
+                          await provider.removeExercise(exercise.id);
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text('Removed ${exercise.name}'),

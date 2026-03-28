@@ -1,60 +1,83 @@
-import 'package:fitness_app/data/routine_repository.dart';
-import 'package:fitness_app/models/exercise.dart';
+import 'package:fitness_app/data/profile_repository.dart';
+import 'package:fitness_app/models/user_profile.dart';
 import 'package:flutter/foundation.dart';
 
-class RoutineProvider extends ChangeNotifier {
-  final RoutineRepository _repository;
-  List<Exercise> _savedExercises = [];
+class ProfileProvider extends ChangeNotifier {
+  final ProfileRepository _repository;
+  UserProfile _profile;
 
-  RoutineProvider(this._repository) {
+  ProfileProvider(this._repository) : _profile = UserProfile.defaults() {
     _init();
   }
 
   Future<void> _init() async {
-    _savedExercises = await _repository.loadRoutine();
+    _profile = await _repository.loadProfile();
     notifyListeners();
   }
 
-  List<Exercise> get savedExercises => List.unmodifiable(_savedExercises);
+  String get name => _profile.name;
+  int get age => _profile.age;
+  double get weightGoal => _profile.weightGoal;
+  String get weightUnit => _profile.weightUnit;
+  int get restTimer => _profile.restTimerSeconds;
+  bool get notificationsEnabled => _profile.notificationsEnabled;
+  bool get isMetric => _profile.weightUnit == 'kg';
+  UserProfile get profile => _profile;
 
-  int get exerciseCount => _savedExercises.length;
-
-  int get totalSets =>
-      _savedExercises.fold(0, (sum, exercise) => sum + exercise.sets);
-
-  double get totalVolume =>
-      _savedExercises.fold(0.0, (sum, exercise) => sum + exercise.volume);
-
-  bool isSaved(String id) {
-    return _savedExercises.any((exercise) => exercise.id == id);
+  Future<void> updateName(String name) async {
+    _profile = _profile.copyWith(name: name);
+    notifyListeners();
+    await _repository.saveProfile(_profile);
   }
 
-  Map<String, int> get muscleGroupBreakdown {
-    final Map<String, int> breakdown = {};
-    for (final exercise in _savedExercises) {
-      breakdown[exercise.muscleGroup] =
-          (breakdown[exercise.muscleGroup] ?? 0) + 1;
+  Future<void> updateAge(int age) async {
+    _profile = _profile.copyWith(age: age);
+    notifyListeners();
+    await _repository.saveProfile(_profile);
+  }
+
+  Future<void> updateWeightGoal(double weightGoal) async {
+    _profile = _profile.copyWith(weightGoal: weightGoal);
+    notifyListeners();
+    await _repository.saveProfile(_profile);
+  }
+
+  Future<void> updateWeightUnit(String unit) async {
+    if (unit == 'kg' || unit == 'lbs') {
+      _profile = _profile.copyWith(weightUnit: unit);
+      notifyListeners();
+      await _repository.saveProfile(_profile);
     }
-    return breakdown;
   }
 
-  Future<void> addExercise(Exercise exercise) async {
-    if (isSaved(exercise.id)) return;
-
-    _savedExercises = [..._savedExercises, exercise];
+  Future<void> updateRestTimer(int seconds) async {
+    final clampedSeconds = seconds.clamp(15, 300);
+    _profile = _profile.copyWith(restTimerSeconds: clampedSeconds);
     notifyListeners();
-    await _repository.saveRoutine(_savedExercises);
+    await _repository.saveProfile(_profile);
   }
 
-  Future<void> removeExercise(String id) async {
-    _savedExercises = _savedExercises.where((e) => e.id != id).toList();
+  void previewRestTimer(int seconds) {
+    final clampedSeconds = seconds.clamp(15, 300);
+    _profile = _profile.copyWith(restTimerSeconds: clampedSeconds);
     notifyListeners();
-    await _repository.saveRoutine(_savedExercises);
   }
 
-  Future<void> clearAllExercises() async {
-    _savedExercises = [];
+  Future<void> updateNotificationsEnabled(bool enabled) async {
+    _profile = _profile.copyWith(notificationsEnabled: enabled);
     notifyListeners();
-    await _repository.clearRoutine();
+    await _repository.saveProfile(_profile);
+  }
+
+  Future<void> resetProfile() async {
+    _profile = UserProfile.defaults();
+    notifyListeners();
+    await _repository.clearProfile();
+  }
+
+  Future<void> resetEverything() async {
+    _profile = UserProfile.defaults();
+    notifyListeners();
+    await _repository.clearProfile();
   }
 }

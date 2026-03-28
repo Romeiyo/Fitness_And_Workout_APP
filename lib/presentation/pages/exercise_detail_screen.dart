@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fitness_app/routes/app_router.dart';
-import 'package:fitness_app/widgets/custom_button.dart';
-import 'package:fitness_app/widgets/metric_card.dart';
+import 'package:fitness_app/presentation/widgets/custom_button.dart';
+import 'package:fitness_app/presentation/widgets/metric_card.dart';
 
 class ExerciseDetailScreen extends StatelessWidget {
   final String exerciseName;

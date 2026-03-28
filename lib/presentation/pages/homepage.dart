@@ -1,11 +1,11 @@
-import 'package:fitness_app/providers/profile_provider.dart';
-import 'package:fitness_app/pages/settings_profile_screen.dart';
+import 'package:fitness_app/domain/profile_provider.dart';
+import 'package:fitness_app/presentation/pages/settings_profile_screen.dart';
 import 'package:fitness_app/routes/app_router.dart';
-import 'package:fitness_app/widgets/workout_tile.dart';
+import 'package:fitness_app/presentation/widgets/workout_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../models/exercise.dart';
-import '../providers/routine_provider.dart';
+import '../../models/exercise.dart';
+import '../../domain/routine_provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -80,7 +80,7 @@ class _HomePageState extends State<HomePage> {
     );
 
     if (result != null && mounted) {
-      context.read<RoutineProvider>().addExercise(result);
+      await context.read<RoutineProvider>().addExercise(result);
       
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

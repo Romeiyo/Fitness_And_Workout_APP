@@ -1,6 +1,6 @@
 import 'package:fitness_app/data/profile_repository.dart';
 import 'package:fitness_app/data/routine_repository.dart';
-import 'package:fitness_app/pages/homepage.dart';
+import 'package:fitness_app/presentation/pages/homepage.dart';
 import 'package:fitness_app/domain/profile_provider.dart';
 import 'package:fitness_app/domain/routine_provider.dart';
 import 'package:flutter/material.dart';
@@ -18,14 +18,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => RoutineProvider(RoutineRepository()),),
-        ChangeNotifierProvider(create: (_) => ProfileProvider(ProfileRepository()),),
+        ChangeNotifierProvider(create: (context) => RoutineProvider(),),
+        ChangeNotifierProvider(create: (context) => ProfileProvider(),),
       ],
       child: MaterialApp(
         title: 'Fitness App',
         navigatorKey: navigatorKey,
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightGreenAccent),
+          useMaterial3: true,
         ),
         debugShowCheckedModeBanner: true,
         home: const HomePage(),
