@@ -1,4 +1,3 @@
-import 'package:fitness_app/models/exercise.dart';
 import 'package:fitness_app/presentation/pages/exercise_detail_screen.dart';
 import 'package:fitness_app/presentation/pages/exercise_list_screen.dart';
 import 'package:fitness_app/presentation/pages/settings_profile_screen.dart';

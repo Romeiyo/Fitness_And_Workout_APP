@@ -1,6 +1,6 @@
 import 'dart:convert';
+import 'package:fitness_app/models/user_profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../models/user_profile.dart';
 
 class ProfileRepository {
   static const String _key = 'user_profile';
