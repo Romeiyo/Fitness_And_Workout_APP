@@ -1,6 +1,8 @@
+import 'package:fitness_app/data/profile_repository.dart';
+import 'package:fitness_app/data/routine_repository.dart';
 import 'package:fitness_app/pages/homepage.dart';
-import 'package:fitness_app/providers/profile_provider.dart';
-import 'package:fitness_app/providers/routine_provider.dart';
+import 'package:fitness_app/domain/profile_provider.dart';
+import 'package:fitness_app/domain/routine_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fitness_app/routes/app_router.dart';
@@ -16,8 +18,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => RoutineProvider()),
-        ChangeNotifierProvider(create: (context) => ProfileProvider()),
+        ChangeNotifierProvider(create: (_) => RoutineProvider(RoutineRepository()),),
+        ChangeNotifierProvider(create: (_) => ProfileProvider(ProfileRepository()),),
       ],
       child: MaterialApp(
         title: 'Fitness App',
