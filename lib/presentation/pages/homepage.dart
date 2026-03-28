@@ -1,5 +1,4 @@
 import 'package:fitness_app/domain/profile_provider.dart';
-import 'package:fitness_app/presentation/pages/settings_profile_screen.dart';
 import 'package:fitness_app/routes/app_router.dart';
 import 'package:fitness_app/presentation/widgets/workout_tile.dart';
 import 'package:flutter/material.dart';
@@ -148,7 +147,6 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Greeting Card with Profile Info
             Consumer<ProfileProvider>(
               builder: (context, profileProvider, child) {
                 return Container(

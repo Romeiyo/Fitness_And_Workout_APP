@@ -21,7 +21,6 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
   @override
   void initState() {
     super.initState();
-    // Initialize controllers with current values after provider is loaded
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final provider = Provider.of<ProfileProvider>(context, listen: false);
       _nameController.text = provider.name;
@@ -142,7 +141,6 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
               await Provider.of<ProfileProvider>(context, listen: false)
                   .resetProfile();
               
-              // Update controllers
               _nameController.text = 'Guest';
               _ageController.clear();
               _weightGoalController.clear();
@@ -188,7 +186,6 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
               await Provider.of<ProfileProvider>(context, listen: false)
                   .resetEverything();
               
-              // Update controllers
               _nameController.text = 'Guest';
               _ageController.clear();
               _weightGoalController.clear();
@@ -275,7 +272,6 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                     ),
                     const SizedBox(height: 20),
                     
-                    // Name field
                     TextFormField(
                       controller: _nameController,
                       decoration: InputDecoration(
@@ -293,7 +289,6 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                     ),
                     const SizedBox(height: 16),
                     
-                    // Age field
                     TextFormField(
                       controller: _ageController,
                       keyboardType: TextInputType.number,
@@ -312,7 +307,6 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                     ),
                     const SizedBox(height: 16),
                     
-                    // Weight goal field with dynamic unit
                     Consumer<ProfileProvider>(
                       builder: (context, provider, child) {
                         return TextFormField(
@@ -341,7 +335,6 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
             
             const SizedBox(height: 24),
             
-            // Preferences Section
             Container(
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -375,7 +368,6 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                     ),
                     const SizedBox(height: 20),
                     
-                    // Weight Unit selector
                     const Text(
                       'Weight Unit',
                       style: TextStyle(

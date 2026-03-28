@@ -310,7 +310,6 @@ class ExerciseDetailScreen extends StatelessWidget {
                 Expanded(
                   child: CustomButton(
                     onTap: () {
-                      // Log exercise completion
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text('Completed $exerciseName! Great job!'),

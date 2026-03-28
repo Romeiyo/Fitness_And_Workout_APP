@@ -5,21 +5,18 @@ void main() async {
   
   bool allPassed = true;
   
-  // Check presentation layer
   allPassed &= await checkLayer(
     'presentation',
     'shared_preferences',
     'presentation layer must not import shared_preferences',
   );
   
-  // Check data layer
   allPassed &= await checkLayer(
     'data',
     'ChangeNotifier',
     'data layer must not import ChangeNotifier',
   );
   
-  // Check domain layer
   allPassed &= await checkLayer(
     'domain',
     'shared_preferences',
@@ -33,7 +30,7 @@ void main() async {
 Future<bool> checkLayer(String folder, String forbiddenImport, String message) async {
   final directory = Directory('lib/$folder');
   if (!await directory.exists()) {
-    print('⚠️  $folder folder not found');
+    print('$folder folder not found');
     return true;
   }
   
@@ -44,15 +41,15 @@ Future<bool> checkLayer(String folder, String forbiddenImport, String message) a
     if (file is File && file.path.endsWith('.dart')) {
       final content = await file.readAsString();
       if (content.contains(forbiddenImport)) {
-        print('❌ FAIL: $message');
-        print('   Found in: ${file.path}');
+        print('FAIL: $message');
+        print('Found in: ${file.path}');
         passed = false;
       }
     }
   }
   
   if (passed) {
-    print('✅ PASS: $message');
+    print('PASS: $message');
   }
   
   return passed;
