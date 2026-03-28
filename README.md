@@ -119,5 +119,5 @@ dart verify_architecture.dart
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Author
-Romio
+Romio  
 Created as part of professional software development training at BitCube.
