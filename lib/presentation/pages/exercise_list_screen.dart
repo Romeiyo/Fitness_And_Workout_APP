@@ -1,9 +1,9 @@
-import 'package:fitness_app/widgets/workout_favorite.dart';
+import 'package:fitness_app/presentation/widgets/workout_favorite.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../models/exercise.dart';
-import '../providers/routine_provider.dart';
-import '../routes/app_router.dart';
+import '../../models/exercise.dart';
+import '../../domain/routine_provider.dart';
+import '../../routes/app_router.dart';
 
 class ExerciseListScreen extends StatelessWidget {
   final String categoryName;
@@ -528,7 +528,7 @@ class ExerciseListScreen extends StatelessWidget {
                               exercise: exercise.name,
                               image: exercise.image ?? 'assets/day.jpg',
                               isSaved: isSaved,
-                              onFavoriteToggle: () {
+                              onFavoriteToggle: () async {
                                 if (isSaved) {
                                   provider.removeExercise(exercise.id);
                                   ScaffoldMessenger.of(context).showSnackBar(
@@ -539,7 +539,7 @@ class ExerciseListScreen extends StatelessWidget {
                                     ),
                                   );
                                 } else {
-                                  provider.addExercise(exercise);
+                                  await provider.addExercise(exercise);
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content: Text('Added ${exercise.name} to saved'),

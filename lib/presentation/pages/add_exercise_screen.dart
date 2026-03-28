@@ -1,7 +1,7 @@
 import 'package:fitness_app/models/exercise.dart';
 import 'package:fitness_app/routes/app_router.dart';
-import 'package:fitness_app/widgets/custom_button.dart';
-import 'package:fitness_app/widgets/exercise_input_field.dart';
+import 'package:fitness_app/presentation/widgets/custom_button.dart';
+import 'package:fitness_app/presentation/widgets/exercise_input_field.dart';
 import 'package:flutter/material.dart';
 
 class AddExerciseScreen extends StatefulWidget {

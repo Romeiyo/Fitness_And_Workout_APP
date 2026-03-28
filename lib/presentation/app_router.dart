@@ -1,12 +1,12 @@
 import 'package:fitness_app/models/exercise.dart';
-import 'package:fitness_app/pages/exercise_detail_screen.dart';
-import 'package:fitness_app/pages/exercise_list_screen.dart';
-import 'package:fitness_app/pages/settings_profile_screen.dart';
+import 'package:fitness_app/presentation/pages/exercise_detail_screen.dart';
+import 'package:fitness_app/presentation/pages/exercise_list_screen.dart';
+import 'package:fitness_app/presentation/pages/settings_profile_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:fitness_app/pages/homepage.dart';
-import 'package:fitness_app/pages/bmi_calculator.dart';
-import 'package:fitness_app/pages/add_exercise_screen.dart';
-import 'package:fitness_app/pages/my_exercises_page.dart';
+import 'package:fitness_app/presentation/pages/homepage.dart';
+import 'package:fitness_app/presentation/pages/bmi_calculator.dart';
+import 'package:fitness_app/presentation/pages/add_exercise_screen.dart';
+import 'package:fitness_app/presentation/pages/my_exercises_page.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
