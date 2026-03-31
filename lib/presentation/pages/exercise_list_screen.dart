@@ -1,9 +1,9 @@
+import 'package:fitness_app/domain/routine_provider.dart';
+import 'package:fitness_app/models/exercise.dart';
+import 'package:fitness_app/presentation/pages/exercise_detail_screen.dart';
 import 'package:fitness_app/presentation/widgets/workout_favorite.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../models/exercise.dart';
-import '../../domain/routine_provider.dart';
-import '../../routes/app_router.dart';
 
 class ExerciseListScreen extends StatelessWidget {
   final String categoryName;
@@ -427,21 +427,17 @@ class ExerciseListScreen extends StatelessWidget {
         title: Text('$categoryName Exercises'),
         backgroundColor: themeColor,
         foregroundColor: foregroundColor,
-        leading: Icon(iconData, color: foregroundColor),
-        actions: [
-          IconButton(
-            onPressed: () {
-              context.pushRouteWithArgs(
-                AppRoute.myExercises,
-                MyExercisesArgs(
-                  onAddExercise: () {},
-                ),
-              );
-            },
-            icon: const Icon(Icons.favorite),
-            tooltip: 'My Saved Exercises',
-          ),
-        ],
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),
+        // actions: [
+        //   IconButton(
+        //     onPressed: () {},
+        //     icon: const Icon(Icons.favorite),
+        //     tooltip: 'My Saved Exercises',
+        //   ),
+        // ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -513,14 +509,16 @@ class ExerciseListScreen extends StatelessWidget {
                           
                           return GestureDetector(
                             onTap: () {
-                              context.pushRouteWithArgs(
-                                AppRoute.exerciseDetail,
-                                ExerciseDetailArgs(
-                                  exerciseName: exercise.name,
-                                  muscleGroup: exercise.muscleGroup,
-                                  sets: exercise.sets,
-                                  reps: exercise.reps,
-                                  weight: exercise.weight,
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ExerciseDetailScreen(
+                                    exerciseName: exercise.name,
+                                    muscleGroup: exercise.muscleGroup,
+                                    sets: exercise.sets,
+                                    reps: exercise.reps,
+                                    weight: exercise.weight,
+                                  ),
                                 ),
                               );
                             },

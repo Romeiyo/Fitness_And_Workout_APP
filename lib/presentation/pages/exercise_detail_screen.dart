@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fitness_app/routes/app_router.dart';
 import 'package:fitness_app/presentation/widgets/custom_button.dart';
 import 'package:fitness_app/presentation/widgets/metric_card.dart';
 
@@ -84,6 +83,10 @@ class ExerciseDetailScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(exerciseName),
         backgroundColor: Colors.greenAccent,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
@@ -155,7 +158,7 @@ class ExerciseDetailScreen extends StatelessWidget {
                       ),
                       child: Icon(
                         muscleIcon,
-                        color: muscleColor,
+                        color: Colors.white,
                         size: 32,
                       ),
                     ),
@@ -317,6 +320,7 @@ class ExerciseDetailScreen extends StatelessWidget {
                           duration: const Duration(seconds: 2),
                         ),
                       );
+                      Navigator.pop(context);
                     },
                     label: 'Mark Complete',
                   ),
@@ -325,7 +329,7 @@ class ExerciseDetailScreen extends StatelessWidget {
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
-                      context.pop();
+                      Navigator.pop(context);
                     },
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 16),

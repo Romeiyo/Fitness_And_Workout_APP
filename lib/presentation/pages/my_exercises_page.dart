@@ -1,6 +1,6 @@
+import 'package:fitness_app/domain/routine_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../domain/routine_provider.dart';
 
 class MyExercisesPage extends StatelessWidget {
   final VoidCallback onAddExercise;
