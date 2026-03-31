@@ -1,10 +1,8 @@
 import 'package:fitness_app/domain/profile_provider.dart';
-import 'package:fitness_app/routes/app_router.dart';
+import 'package:fitness_app/presentation/pages/exercise_list_screen.dart';
 import 'package:fitness_app/presentation/widgets/workout_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../models/exercise.dart';
-import '../../domain/routine_provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -73,23 +71,23 @@ class _HomePageState extends State<HomePage> {
     },
   ];
 
-  Future<void> _addCustomExercise() async {
-    final result = await context.pushRoute<Exercise?>(
-      AppRoute.addExercise,
-    );
+  // Future<void> _addCustomExercise() async {
+  //   final result = await context.pushRoute<Exercise?>(
+  //     AppRoute.addExercise,
+  //   );
 
-    if (result != null && mounted) {
-      await context.read<RoutineProvider>().addExercise(result);
+  //   if (result != null && mounted) {
+  //     await context.read<RoutineProvider>().addExercise(result);
       
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('${result.name} added successfully!'),
-          backgroundColor: Colors.green,
-          duration: const Duration(seconds: 2),
-        ),
-      );
-    }
-  }
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //         content: Text('${result.name} added successfully!'),
+  //         backgroundColor: Colors.green,
+  //         duration: const Duration(seconds: 2),
+  //       ),
+  //     );
+  //   }
+  // }
 
   String _getGreeting(String name) {
     if (name == 'Guest' || name.isEmpty) {
@@ -113,34 +111,6 @@ class _HomePageState extends State<HomePage> {
         ),
         title: const Text(appName),
         leading: const Icon(Icons.fitness_center),
-        actions: [
-          IconButton(
-            onPressed: () {
-              context.pushRoute(AppRoute.bmiCalculator);
-            },
-            icon: const Icon(Icons.calculate),
-            tooltip: 'BMI Calculator',
-          ),
-          IconButton(
-            onPressed: () {
-              context.pushRoute(AppRoute.settings);
-            },
-            icon: const Icon(Icons.settings),
-            tooltip: 'Settings & Profile',
-          ),
-          IconButton(
-            onPressed: () {
-              context.pushRouteWithArgs(
-                AppRoute.myExercises,
-                MyExercisesArgs(
-                  onAddExercise: _addCustomExercise,
-                ),
-              );
-            },
-            icon: const Icon(Icons.favorite),
-            tooltip: 'My Saved Exercises',
-          ),
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -267,8 +237,6 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             const SizedBox(height: 5),
-            Text('Welcome to the Fitness App!'),
-            const SizedBox(height: 5),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -301,12 +269,14 @@ class _HomePageState extends State<HomePage> {
                       final category = workoutCategories[index];
                       return GestureDetector(
                         onTap: () {
-                          context.pushRouteWithArgs(
-                            AppRoute.exerciseList,
-                            ExerciseListArgs(
-                              categoryName: category['exercise'],
-                              themeColor: category['color'],
-                              iconData: category['icon'],
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ExerciseListScreen(
+                                categoryName: category['exercise'],
+                                themeColor: category['color'],
+                                iconData: category['icon'],
+                              ),
                             ),
                           );
                         },
@@ -322,12 +292,6 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _addCustomExercise,
-        tooltip: 'Add Custom Exercise',
-        heroTag: 'add_exercise_fab',
-        child: const Icon(Icons.add),
       ),
     );
   }

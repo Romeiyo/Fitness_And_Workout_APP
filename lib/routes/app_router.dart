@@ -1,5 +1,7 @@
 import 'package:fitness_app/presentation/pages/exercise_detail_screen.dart';
 import 'package:fitness_app/presentation/pages/exercise_list_screen.dart';
+import 'package:fitness_app/presentation/pages/exercise_search_screen.dart';
+import 'package:fitness_app/presentation/pages/main_navigation_screen.dart';
 import 'package:fitness_app/presentation/pages/settings_profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fitness_app/presentation/pages/homepage.dart';
@@ -51,6 +53,7 @@ class NoArgs {
 
 enum AppRoute<T> {
   home<NoArgs>(),
+  mainNavigationScreen<NoArgs>(),
   bmiCalculator<NoArgs>(),
   addExercise<NoArgs>(),
 
@@ -59,7 +62,9 @@ enum AppRoute<T> {
   exerciseList<ExerciseListArgs>(),
   exerciseDetail<ExerciseDetailArgs>(),
   
-  myExercises<MyExercisesArgs>();
+  myExercises<MyExercisesArgs>(),
+
+  exerciseSearch<NoArgs>();
 
   const AppRoute();
 
@@ -68,6 +73,7 @@ enum AppRoute<T> {
       settings: RouteSettings(name: name),
       builder: (context) => switch (this) {
         AppRoute.home => const HomePage(),
+        AppRoute.mainNavigationScreen => MainNavigationScreen(),
         AppRoute.bmiCalculator => const BmiCalculator(),
         AppRoute.addExercise => const AddExerciseScreen(),
         AppRoute.settings => const SettingsProfileScreen(),
@@ -86,6 +92,7 @@ enum AppRoute<T> {
           reps: (args as ExerciseDetailArgs).reps,
           weight: (args as ExerciseDetailArgs).weight,
         ),
+        AppRoute.exerciseSearch => const ExerciseSearchScreen(),
       },
     );
   }
