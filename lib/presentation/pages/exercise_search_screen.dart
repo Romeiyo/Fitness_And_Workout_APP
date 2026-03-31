@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:fitness_app/domain/exercise_search_provider.dart';
 import 'package:fitness_app/models/api_exercise.dart';
 import 'package:flutter/material.dart';
@@ -12,11 +13,21 @@ class ExerciseSearchScreen extends StatefulWidget {
 
 class _ExerciseSearchScreenState extends State<ExerciseSearchScreen> {
   final TextEditingController _searchController = TextEditingController();
+  Timer? _debounceTimer;
   
   @override
   void dispose() {
+    _debounceTimer?.cancel();
     _searchController.dispose();
     super.dispose();
+  }
+
+  void _onSearchChanged(String value) {
+    if (_debounceTimer?.isActive ?? false) _debounceTimer?.cancel();
+    _debounceTimer = Timer(
+      const Duration(milliseconds: 500), () {
+        _performSearch(value);
+      });
   }
   
   void _performSearch(String query) {
@@ -51,6 +62,7 @@ class _ExerciseSearchScreenState extends State<ExerciseSearchScreen> {
                 Expanded(
                   child: TextField(
                     controller: _searchController,
+                    onChanged: _onSearchChanged,
                     onSubmitted: _performSearch,
                     decoration: InputDecoration(
                       hintText: 'Search by muscle (e.g., biceps, chest)',
