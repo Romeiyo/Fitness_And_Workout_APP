@@ -1,6 +1,6 @@
 # Fitness & Workout Tracker
 
-A comprehensive mobile fitness application built with Flutter that helps users discover exercises, track workouts, manage custom routines, and monitor their fitness progress.
+A comprehensive mobile fitness application built with Flutter that helps users discover exercises, track outdoor workouts, manage custom routines, and monitor their fitness progress.
 
 ## Features
 
@@ -16,18 +16,35 @@ A comprehensive mobile fitness application built with Flutter that helps users d
   - Warm-Up Exercises
   - Yoga Exercises
 
-### Exercise Management
-- **Custom Exercises**: Create and save personalized exercises with custom sets, reps, and weights
-- **Favorites System**: Save exercises to your personal collection with a simple heart toggle
-- **Exercise Details**: View detailed information including total volume calculation and muscle group targeting
+### Exercise Search & Discovery
+- **API-Powered Search**: Search exercises by muscle group using the API-Ninjas Exercise Database
+- **Exercise Details**: View complete exercise information including:
+  - Instructions
+  - Required equipment
+  - Difficulty level
+  - Target muscle group
+- **Real-time Search**: Debounced search with loading states and error handling
+
+### Custom Exercise Management
+- **Create Custom Exercises**: Build personalized exercises with custom sets, reps, and weights
+- **Saved Routine**: Add exercises to your personal saved routine with a simple heart toggle
+- **Exercise Details**: View detailed information including total volume calculation (sets × reps × weight)
 - **Muscle Group Targeting**: Exercises categorized by specific muscle groups (Chest, Back, Legs, Arms, Shoulders, Core)
+
+### Outdoor Workout Tracking
+- **GPS Location Tracking**: Track outdoor runs, walks, or cycling with real-time GPS
+- **Workout Timer**: Automatically tracks elapsed time during workouts
+- **Distance Calculation**: Calculates total distance traveled
+- **Pace Tracking**: Displays average pace per kilometer
+- **Workout Summary**: View comprehensive workout statistics after completion
+- **Location Permissions**: Handles location permission requests and errors gracefully
 
 ### User Profile & Settings
 - **Personal Profile**: Save your name, age, and weight goals
 - **Weight Units**: Toggle between kilograms (kg) and pounds (lbs)
-- **Rest Timer**: Configurable timer duration (15-300 seconds) with live preview
+- **Rest Timer**: Configurable timer duration (15-300 seconds) with live slider preview
 - **Notifications**: Enable/disable workout reminders and tips
-- **Data Management**: Reset profile data or clear all app data
+- **Data Management**: Reset profile data or clear all app data with confirmation dialogs
 
 ### BMI Calculator
 - **Instant BMI Calculation**: Enter height (cm) and weight (kg) for immediate results
@@ -39,6 +56,8 @@ A comprehensive mobile fitness application built with Flutter that helps users d
 - **Clean Architecture**: Separation of concerns with presentation, domain, and data layers
 - **Provider Pattern**: Reactive state management using Provider and ChangeNotifier
 - **Repository Pattern**: Data persistence using SharedPreferences
+- **Dio HTTP Client**: API integration with timeout handling and error management
+- **Geolocator**: GPS location services for outdoor workout tracking
 - **Type-safe Navigation**: Custom AppRouter with generic argument support
 
 ### Responsive Design
@@ -78,14 +97,27 @@ flutter run
 
 ```text
 lib/
-|-- models/          # Data models (Exercise, UserProfile)
-|-- domain/          # Business logic (ProfileProvider, RoutineProvider)
-|-- data/            # Data access (ProfileRepository, RoutineRepository)
+|-- models/          # Data models (Exercise, UserProfile, ApiExercise)
+|-- domain/          # Business logic & Providers(ProfileProvider, RoutineProvider, ExerciseSearchProvider, WorkoutTrackingProvider)
+|-- data/            # Data access layer (ProfileRepository, RoutineRepository, LocationService, ApiRepository)
 |-- presentation/    # UI components
 |   |-- pages/       # Screen widgets
 |   |-- widgets/     # Reusable UI components
 |-- routes/          # Navigation (AppRouter)
 ```
+
+### Dependencies
+- provider: State management
+- shared_preferences: Local data persistence
+- dio: HTTP client for API requests
+- geolocator: GPS location services
+- flutter/material: UI framework
+
+### API Integration
+- The app uses the API-Ninjas Exercise Database for exercise search functionality. To use this feature:
+- Obtained an API key from API-Ninjas
+- The API key is already configured in api_repository.dart
+- Search exercises by muscle group (e.g., biceps, chest, quadriceps)
 
 ### Built With
 - Flutter - UI framework
@@ -104,6 +136,15 @@ Run verification with:
 ```bash
 dart verify_architecture.dart
 ```
+
+### App Navigation
+The app uses a bottom navigation bar with five main sections:
+
+- BMI Calculator - Calculate and track Body Mass Index
+- My Exercises - View and manage saved exercises
+- Home - Browse workout categories and featured workouts
+- Search - Search exercises by muscle group via API
+- Outdoor Run - Track outdoor workouts with GPS
 
 ### Future Enhancements
 - Add exercise videos/gifs with step-by-step instructions
