@@ -1,10 +1,10 @@
+import 'package:fitness_app/domain/workout_phase.dart';
+import 'package:fitness_app/domain/workout_tracking_provider.dart';
+import 'package:fitness_app/presentation/widgets/custom_button.dart';
+import 'package:fitness_app/presentation/widgets/location_permission_card.dart';
+import 'package:fitness_app/presentation/widgets/workout_summary_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../domain/workout_tracking_provider.dart';
-import '../../domain/workout_phase.dart';
-import '../widgets/location_permission_card.dart';
-import '../widgets/workout_summary_card.dart';
-import '../widgets/custom_button.dart';  // Reuse your existing button
 
 class OutdoorWorkoutScreen extends StatelessWidget {
   const OutdoorWorkoutScreen({super.key});
@@ -19,7 +19,6 @@ class OutdoorWorkoutScreen extends StatelessWidget {
       ),
       body: Consumer<WorkoutTrackingProvider>(
         builder: (context, provider, child) {
-          // Show loading state
           if (provider.isLoadingLocation && provider.workoutPhase == WorkoutPhase.idle) {
             return const Center(
               child: Column(
@@ -33,7 +32,6 @@ class OutdoorWorkoutScreen extends StatelessWidget {
             );
           }
           
-          // Show different UI based on workout phase
           switch (provider.workoutPhase) {
             case WorkoutPhase.idle:
               return _buildIdlePhase(context, provider);
@@ -53,7 +51,6 @@ class OutdoorWorkoutScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Hero icon
           Container(
             padding: const EdgeInsets.all(40),
             decoration: BoxDecoration(
@@ -93,7 +90,6 @@ class OutdoorWorkoutScreen extends StatelessWidget {
           ),
           const SizedBox(height: 30),
           
-          // Error message if any
           if (provider.errorMessage != null)
             LocationPermissionCard(
               errorMessage: provider.errorMessage!,
@@ -102,7 +98,6 @@ class OutdoorWorkoutScreen extends StatelessWidget {
           
           const SizedBox(height: 20),
           
-          // Start button - reuse your CustomButton
           CustomButton(
             onTap: () => provider.startWorkout(),
             label: 'Start Run',
@@ -118,7 +113,6 @@ class OutdoorWorkoutScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Timer display
           Container(
             padding: const EdgeInsets.all(30),
             decoration: BoxDecoration(
@@ -154,7 +148,6 @@ class OutdoorWorkoutScreen extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           
-          // Current location card
           if (provider.currentPosition != null)
             Container(
               padding: const EdgeInsets.all(16),
@@ -191,7 +184,6 @@ class OutdoorWorkoutScreen extends StatelessWidget {
             ),
           const SizedBox(height: 20),
           
-          // Error message if GPS fails during workout
           if (provider.errorMessage != null)
             Container(
               padding: const EdgeInsets.all(12),
@@ -216,7 +208,6 @@ class OutdoorWorkoutScreen extends StatelessWidget {
           
           const SizedBox(height: 20),
           
-          // Update Location button (proves tracker is active)
           OutlinedButton.icon(
             onPressed: () => provider.updateLocation(),
             icon: const Icon(Icons.refresh),
@@ -227,7 +218,6 @@ class OutdoorWorkoutScreen extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           
-          // Finish button
           CustomButton(
             onTap: provider.canFinish ? () => provider.finishWorkout() : null,
             label: 'Finish Run',
@@ -243,7 +233,6 @@ class OutdoorWorkoutScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Completion checkmark
           Container(
             padding: const EdgeInsets.all(20),
             alignment: Alignment.center,
@@ -265,7 +254,6 @@ class OutdoorWorkoutScreen extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           
-          // Summary card with stats
           WorkoutSummaryCard(
             formattedTime: provider.formattedTime,
             formattedDistance: provider.formattedDistance,
@@ -275,7 +263,6 @@ class OutdoorWorkoutScreen extends StatelessWidget {
           
           const SizedBox(height: 20),
           
-          // Start and end locations if available
           if (provider.startPosition != null && provider.endPosition != null)
             Container(
               padding: const EdgeInsets.all(16),
