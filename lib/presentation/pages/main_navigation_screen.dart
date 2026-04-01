@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:fitness_app/presentation/pages/homepage.dart';
 import 'package:fitness_app/presentation/pages/my_exercises_page.dart';
 import 'package:fitness_app/presentation/pages/exercise_search_screen.dart';
-import 'package:fitness_app/presentation/pages/settings_profile_screen.dart';
 import 'package:fitness_app/routes/app_router.dart';
 import 'package:provider/provider.dart';
 
