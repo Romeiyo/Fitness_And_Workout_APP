@@ -1,6 +1,7 @@
 import 'package:fitness_app/domain/profile_provider.dart';
 import 'package:fitness_app/presentation/pages/exercise_list_screen.dart';
 import 'package:fitness_app/presentation/widgets/workout_tile.dart';
+import 'package:fitness_app/routes/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -111,6 +112,15 @@ class _HomePageState extends State<HomePage> {
         ),
         title: const Text(appName),
         leading: const Icon(Icons.fitness_center),
+        actions: [
+          IconButton(
+            onPressed: () {
+              context.pushRoute(AppRoute.settings);
+            }, 
+            icon: const Icon(Icons.settings),
+            tooltip: "Settings & Profile",
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

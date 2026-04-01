@@ -1,9 +1,11 @@
 import 'package:fitness_app/data/api_repository.dart';
+import 'package:fitness_app/data/location_service.dart';
 import 'package:fitness_app/data/profile_repository.dart';
 import 'package:fitness_app/data/routine_repository.dart';
 import 'package:fitness_app/domain/exercise_search_provider.dart';
 import 'package:fitness_app/domain/profile_provider.dart';
 import 'package:fitness_app/domain/routine_provider.dart';
+import 'package:fitness_app/domain/workout_tracking_provider.dart';
 import 'package:fitness_app/presentation/pages/main_navigation_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -23,6 +25,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => RoutineProvider(RoutineRepository()),),
         ChangeNotifierProvider(create: (_) => ProfileProvider(ProfileRepository()),),
         ChangeNotifierProvider(create: (_) => ExerciseSearchProvider(ExerciseApiRepository()),),
+        ChangeNotifierProvider(create: (_) => WorkoutTrackingProvider(LocationService()),),
       ],
       child: MaterialApp(
         title: 'Fitness App',

@@ -1,6 +1,7 @@
 import 'package:fitness_app/domain/routine_provider.dart';
 import 'package:fitness_app/models/exercise.dart';
 import 'package:fitness_app/presentation/pages/bmi_calculator.dart';
+import 'package:fitness_app/presentation/pages/outdoor_workout_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fitness_app/presentation/pages/homepage.dart';
 import 'package:fitness_app/presentation/pages/my_exercises_page.dart';
@@ -24,7 +25,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     const MyExercisesPageWrapper(),
     const HomePage(),
     const ExerciseSearchScreen(),
-    const SettingsProfileScreen(),
+    const OutdoorWorkoutScreen(),
   ];
   
   @override
@@ -70,8 +71,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
               label: 'Search',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.settings),
-              label: 'Settings',
+              icon: Icon(Icons.directions_run),
+              label: 'Outdoor Run',
             ),
           ],
         ),
