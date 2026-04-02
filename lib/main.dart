@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:fitness_app/data/api_repository.dart';
 import 'package:fitness_app/data/auth_service.dart';
 import 'package:fitness_app/data/location_service.dart';
+import 'package:fitness_app/data/notification_service.dart';
 import 'package:fitness_app/data/profile_repository.dart';
 import 'package:fitness_app/data/routine_repository.dart';
 import 'package:fitness_app/domain/auth_provider.dart';
@@ -21,6 +22,8 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  await NotificationService().init();
 
   runApp(const MyApp());
 }

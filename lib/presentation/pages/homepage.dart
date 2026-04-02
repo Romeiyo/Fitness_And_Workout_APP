@@ -1,6 +1,5 @@
 import 'package:fitness_app/domain/auth_provider.dart';
 import 'package:fitness_app/domain/profile_provider.dart';
-import 'package:fitness_app/presentation/pages/exercise_list_screen.dart';
 import 'package:fitness_app/presentation/widgets/workout_tile.dart';
 import 'package:fitness_app/routes/app_router.dart';
 import 'package:flutter/material.dart';
