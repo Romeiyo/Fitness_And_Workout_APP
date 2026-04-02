@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
+/// Reusable container for input fields with consistent styling
+/// Used for BMI calculator inputs (height and weight)
 class InputContainer extends StatelessWidget {
-  final String title;
-  final IconData icon;
-  final String unit;
-  final TextEditingController controller;
-  final String hintText;
-  final String? Function(String?)? validator;
+  final String title;               // Field title (e.g., "Height")
+  final IconData icon;              // Icon representing the field
+  final String unit;                // Unit of measurement (e.g., "cm", "kg")
+  final TextEditingController controller;  // Text controller for input
+  final String hintText;            // Placeholder text
+  final String? Function(String?)? validator;  // Validation function
   
   const InputContainer({
     super.key,
@@ -21,6 +23,7 @@ class InputContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      // Card styling with shadow
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -41,6 +44,7 @@ class InputContainer extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Header with icon and title
             Row(
               children: [
                 Icon(icon, color: Colors.blue, size: 24),
@@ -56,6 +60,7 @@ class InputContainer extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12),
+            // Text field with unit suffix
             TextFormField(
               controller: controller,
               keyboardType: TextInputType.numberWithOptions(decimal: true),
@@ -64,7 +69,7 @@ class InputContainer extends StatelessWidget {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
-                suffixText: unit,
+                suffixText: unit,  // Shows "cm" or "kg" at the end of the field
                 suffixStyle: TextStyle(
                   color: Colors.grey.shade600,
                   fontWeight: FontWeight.w500,

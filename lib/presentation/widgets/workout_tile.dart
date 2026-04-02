@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+/// Simple workout tile widget without favorite button
+/// Used on homepage to display workout categories
 class WorkoutTile extends StatelessWidget {
-  final String exercise;
-  final String image;
+  final String exercise;  // Name of the exercise/workout category
+  final String image;     // Path to image asset
 
   const WorkoutTile({
     super.key,
@@ -15,10 +17,8 @@ class WorkoutTile extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
-
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
-
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerLow,
         borderRadius: BorderRadius.circular(20),
@@ -38,15 +38,15 @@ class WorkoutTile extends StatelessWidget {
           width: 1,
         ),
       ),
-
       padding: const EdgeInsets.all(16),
-
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          // Exercise name with stroke effect for readability
           Stack(
             children: [
+              // Stroke text (outline)
               Text(
                 exercise,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -56,6 +56,7 @@ class WorkoutTile extends StatelessWidget {
                       ..color = Colors.white,
                 ),
               ),
+              // Filled text on top
               Text(
                   exercise,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(

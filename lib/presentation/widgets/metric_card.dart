@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-/// A reusable widget for displaying exercise metrics
+/// Reusable widget for displaying exercise metrics
 /// Used in exercise detail screen to show sets, reps, weight, etc.
 class MetricCard extends StatelessWidget {
-  final String title;
-  final String value;
-  final IconData icon;
-  final Color color;
-  final String? suffixText;
+  final String title;        // Metric title (e.g., "SETS")
+  final String value;        // Metric value (e.g., "3")
+  final IconData icon;       // Icon representing the metric
+  final Color color;         // Color theme for this metric
+  final String? suffixText;  // Optional suffix (e.g., "kg", "reps")
   
   const MetricCard({
     super.key,
@@ -22,6 +22,7 @@ class MetricCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
+      // Background color with opacity for visual depth
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
         borderRadius: BorderRadius.circular(12),
@@ -29,8 +30,10 @@ class MetricCard extends StatelessWidget {
       ),
       child: Column(
         children: [
+          // Icon in the metric's color
           Icon(icon, color: color, size: 28),
           const SizedBox(height: 8),
+          // Title text
           Text(
             title,
             style: TextStyle(
@@ -40,6 +43,7 @@ class MetricCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 4),
+          // Value with optional suffix
           Text(
             suffixText != null ? '$value $suffixText' : value,
             style: const TextStyle(

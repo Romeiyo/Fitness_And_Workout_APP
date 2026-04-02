@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:fitness_app/presentation/widgets/custom_button.dart';
 import 'package:fitness_app/presentation/widgets/metric_card.dart';
 
+/// Screen displaying detailed information about an exercise
+/// Shows exercise name, muscle group, sets, reps, weight, and total volume
 class ExerciseDetailScreen extends StatelessWidget {
-  final String exerciseName;
-  final String muscleGroup;
-  final int sets;
-  final int reps;
-  final double weight;
+  final String exerciseName;   // Name of the exercise
+  final String muscleGroup;     // Targeted muscle group
+  final int sets;               // Number of sets
+  final int reps;               // Number of repetitions per set
+  final double weight;          // Weight used in kilograms
   
   const ExerciseDetailScreen({
     super.key,
@@ -19,8 +21,10 @@ class ExerciseDetailScreen extends StatelessWidget {
     required this.weight,
   });
   
+  /// Calculates total volume (sets × reps × weight)
   double get totalVolume => sets * reps * weight;
   
+  /// Returns color based on muscle group for visual differentiation
   Color _getMuscleGroupColor() {
     switch (muscleGroup.toLowerCase()) {
       case 'chest':
@@ -54,6 +58,7 @@ class ExerciseDetailScreen extends StatelessWidget {
     }
   }
   
+  /// Returns icon based on muscle group
   IconData _getMuscleGroupIcon() {
     switch (muscleGroup.toLowerCase()) {
       case 'chest':
@@ -94,6 +99,7 @@ class ExerciseDetailScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            // Hero section with gradient background
             Container(
               padding: const EdgeInsets.all(30),
               decoration: BoxDecoration(
@@ -134,6 +140,7 @@ class ExerciseDetailScreen extends StatelessWidget {
             
             const SizedBox(height: 24),
             
+            // Muscle group info card
             Container(
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -195,6 +202,7 @@ class ExerciseDetailScreen extends StatelessWidget {
             
             const SizedBox(height: 24),
             
+            // Metrics row (sets, reps, weight)
             Row(
               children: [
                 Expanded(
@@ -229,6 +237,7 @@ class ExerciseDetailScreen extends StatelessWidget {
             
             const SizedBox(height: 24),
             
+            // Total volume card
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -282,6 +291,7 @@ class ExerciseDetailScreen extends StatelessWidget {
             
             const SizedBox(height: 24),
             
+            // Pro tip
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
@@ -309,11 +319,13 @@ class ExerciseDetailScreen extends StatelessWidget {
             
             const SizedBox(height: 24),
             
+            // Action buttons
             Row(
               children: [
                 Expanded(
                   child: CustomButton(
                     onTap: () {
+                      // Mark exercise as complete
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text('Completed $exerciseName! Great job!'),

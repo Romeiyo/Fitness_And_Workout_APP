@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
+/// Widget displaying workout summary after completion
+/// Shows time, distance, pace, and provides option to start new workout
 class WorkoutSummaryCard extends StatelessWidget {
-  final String formattedTime;
-  final String formattedDistance;
-  final String formattedPace;
-  final VoidCallback onNewWorkout;
+  final String formattedTime;      // Formatted elapsed time (e.g., "15:30")
+  final String formattedDistance;  // Formatted distance (e.g., "5.2 km")
+  final String formattedPace;      // Formatted pace (e.g., "5:30 min/km")
+  final VoidCallback onNewWorkout; // Callback to start a new workout
   
   const WorkoutSummaryCard({
     super.key,
@@ -33,6 +35,7 @@ class WorkoutSummaryCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          // Title
           const Text(
             'Workout Summary',
             style: TextStyle(
@@ -43,16 +46,20 @@ class WorkoutSummaryCard extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           
+          // Time stat row
           _buildStatRow(Icons.timer, 'Total Time', formattedTime, Colors.blue),
           const Divider(),
           
+          // Distance stat row
           _buildStatRow(Icons.straighten, 'Total Distance', formattedDistance, Colors.green),
           const Divider(),
           
+          // Pace stat row
           _buildStatRow(Icons.speed, 'Average Pace', formattedPace, Colors.purple),
           
           const SizedBox(height: 24),
           
+          // New Workout button
           ElevatedButton(
             onPressed: onNewWorkout,
             style: ElevatedButton.styleFrom(
@@ -69,6 +76,7 @@ class WorkoutSummaryCard extends StatelessWidget {
     );
   }
   
+  /// Helper widget to build a stat row with icon, label, and value
   Widget _buildStatRow(IconData icon, String label, String value, Color color) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),

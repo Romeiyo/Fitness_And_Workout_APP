@@ -4,6 +4,8 @@ import 'package:fitness_app/models/api_exercise.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+/// Screen for searching exercises from external API
+/// Users can search by muscle group and view exercise details
 class ExerciseSearchScreen extends StatefulWidget {
   const ExerciseSearchScreen({super.key});
 
@@ -12,16 +14,23 @@ class ExerciseSearchScreen extends StatefulWidget {
 }
 
 class _ExerciseSearchScreenState extends State<ExerciseSearchScreen> {
+  // Text controller for search input
   final TextEditingController _searchController = TextEditingController();
+  
+  // Debounce timer to prevent excessive API calls
+  // Waits 500ms after user stops typing before searching
   Timer? _debounceTimer;
   
   @override
   void dispose() {
+    // Cancel timer and dispose controller to prevent memory leaks
     _debounceTimer?.cancel();
     _searchController.dispose();
     super.dispose();
   }
 
+  /// Handles search input changes with debouncing
+  /// Only searches after user stops typing for 500ms
   void _onSearchChanged(String value) {
     if (_debounceTimer?.isActive ?? false) _debounceTimer?.cancel();
     _debounceTimer = Timer(
@@ -30,6 +39,7 @@ class _ExerciseSearchScreenState extends State<ExerciseSearchScreen> {
       });
   }
   
+  /// Performs the actual search
   void _performSearch(String query) {
     if (query.trim().isNotEmpty) {
       context.read<ExerciseSearchProvider>().searchExercises(query);
@@ -43,6 +53,7 @@ class _ExerciseSearchScreenState extends State<ExerciseSearchScreen> {
         title: const Text('Search Exercises'),
         backgroundColor: Colors.greenAccent,
         actions: [
+          // Clear button
           IconButton(
             onPressed: () {
               _searchController.clear();
@@ -55,6 +66,7 @@ class _ExerciseSearchScreenState extends State<ExerciseSearchScreen> {
       ),
       body: Column(
         children: [
+          // Search bar
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(
@@ -90,9 +102,11 @@ class _ExerciseSearchScreenState extends State<ExerciseSearchScreen> {
             ),
           ),
           
+          // Search results area
           Expanded(
             child: Consumer<ExerciseSearchProvider>(
               builder: (context, provider, child) {
+                // Show loading indicator
                 if (provider.isLoading) {
                   return const Center(
                     child: Column(
@@ -106,6 +120,7 @@ class _ExerciseSearchScreenState extends State<ExerciseSearchScreen> {
                   );
                 }
                 
+                // Show error message
                 if (provider.hasError) {
                   return Center(
                     child: Column(
@@ -128,6 +143,7 @@ class _ExerciseSearchScreenState extends State<ExerciseSearchScreen> {
                   );
                 }
                 
+                // Show initial empty state
                 if (provider.lastQuery.isEmpty && !provider.hasResults) {
                   return const Center(
                     child: Column(
@@ -143,6 +159,7 @@ class _ExerciseSearchScreenState extends State<ExerciseSearchScreen> {
                   );
                 }
                 
+                // Show no results message
                 if (!provider.hasResults && provider.lastQuery.isNotEmpty) {
                   return Center(
                     child: Column(
@@ -158,6 +175,7 @@ class _ExerciseSearchScreenState extends State<ExerciseSearchScreen> {
                   );
                 }
                 
+                // Display search results
                 return ListView.builder(
                   padding: const EdgeInsets.all(16),
                   itemCount: provider.searchResults.length,
@@ -177,6 +195,7 @@ class _ExerciseSearchScreenState extends State<ExerciseSearchScreen> {
                             Wrap(
                               spacing: 8,
                               children: [
+                                // Muscle group chip
                                 Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                                   decoration: BoxDecoration(
@@ -188,6 +207,7 @@ class _ExerciseSearchScreenState extends State<ExerciseSearchScreen> {
                                     style: const TextStyle(fontSize: 12),
                                   ),
                                 ),
+                                // Difficulty chip
                                 Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                                   decoration: BoxDecoration(
@@ -199,6 +219,7 @@ class _ExerciseSearchScreenState extends State<ExerciseSearchScreen> {
                                     style: const TextStyle(fontSize: 12),
                                   ),
                                 ),
+                                // Equipment chip
                                 Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                                   decoration: BoxDecoration(
@@ -229,6 +250,7 @@ class _ExerciseSearchScreenState extends State<ExerciseSearchScreen> {
     );
   }
   
+  /// Shows exercise details in a dialog
   void _showExerciseDetails(BuildContext context, ApiExercise exercise) {
     showDialog(
       context: context,

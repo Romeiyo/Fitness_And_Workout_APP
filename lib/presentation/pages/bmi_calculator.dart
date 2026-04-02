@@ -3,6 +3,8 @@ import 'package:fitness_app/presentation/widgets/input_container.dart';
 import 'package:fitness_app/presentation/widgets/result_container.dart';
 import 'package:flutter/material.dart';
 
+/// BMI Calculator screen
+/// Allows users to calculate their Body Mass Index based on height and weight
 class BmiCalculator extends StatefulWidget {
   const BmiCalculator({super.key});
 
@@ -11,14 +13,19 @@ class BmiCalculator extends StatefulWidget {
 }
 
 class _BmiCalculatorState extends State<BmiCalculator> {
+  // Text controllers for input fields
   final TextEditingController _heightController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
   
+  // State for calculation results
   double? _bmiResult;
   String? _bmiCategory;
   String? _errorMessage;
   
+  /// Calculates BMI based on entered height and weight
+  /// Formula: weight (kg) / (height in meters)²
   void _calculateBMI() {
+    // Clear previous error
     setState(() {
       _errorMessage = null;
     });
@@ -26,6 +33,7 @@ class _BmiCalculatorState extends State<BmiCalculator> {
     String heightText = _heightController.text.trim();
     String weightText = _weightController.text.trim();
     
+    // Validate height is entered
     if (heightText.isEmpty) {
       setState(() {
         _errorMessage = 'Please enter your height';
@@ -33,6 +41,7 @@ class _BmiCalculatorState extends State<BmiCalculator> {
       return;
     }
     
+    // Validate weight is entered
     if (weightText.isEmpty) {
       setState(() {
         _errorMessage = 'Please enter your weight';
@@ -40,9 +49,11 @@ class _BmiCalculatorState extends State<BmiCalculator> {
       return;
     }
     
+    // Parse inputs to numbers
     double? heightInCm = double.tryParse(heightText);
     double? weightInKg = double.tryParse(weightText);
     
+    // Validate height format
     if (heightInCm == null) {
       setState(() {
         _errorMessage = 'Please enter a valid height (e.g., 175)';
@@ -50,6 +61,7 @@ class _BmiCalculatorState extends State<BmiCalculator> {
       return;
     }
     
+    // Validate weight format
     if (weightInKg == null) {
       setState(() {
         _errorMessage = 'Please enter a valid weight (e.g., 70.5)';
@@ -57,6 +69,7 @@ class _BmiCalculatorState extends State<BmiCalculator> {
       return;
     }
     
+    // Validate height is positive
     if (heightInCm <= 0) {
       setState(() {
         _errorMessage = 'Height must be greater than 0';
@@ -64,6 +77,7 @@ class _BmiCalculatorState extends State<BmiCalculator> {
       return;
     }
     
+    // Validate weight is positive
     if (weightInKg <= 0) {
       setState(() {
         _errorMessage = 'Weight must be greater than 0';
@@ -71,19 +85,24 @@ class _BmiCalculatorState extends State<BmiCalculator> {
       return;
     }
     
+    // Convert cm to meters for BMI calculation
     double heightInMeters = heightInCm / 100;
     
+    // Calculate BMI
     double bmi = weightInKg / (heightInMeters * heightInMeters);
     String category = _getBMICategory(bmi);
     
+    // Update state with results
     setState(() {
       _bmiResult = bmi;
       _bmiCategory = category;
     });
     
+    // Dismiss keyboard after calculation
     FocusScope.of(context).unfocus();
   }
   
+  /// Determines BMI category based on WHO standards
   String _getBMICategory(double bmi) {
     if (bmi < 18.5) return 'Underweight';
     if (bmi < 25) return 'Normal';
@@ -91,6 +110,7 @@ class _BmiCalculatorState extends State<BmiCalculator> {
     return 'Obese';
   }
   
+  /// Clears all input fields and results
   void _clearFields() {
     setState(() {
       _heightController.clear();
@@ -100,8 +120,10 @@ class _BmiCalculatorState extends State<BmiCalculator> {
       _errorMessage = null;
     });
     
+    // Dismiss keyboard
     FocusScope.of(context).unfocus();
     
+    // Show confirmation message
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Fields cleared'),
@@ -118,6 +140,7 @@ class _BmiCalculatorState extends State<BmiCalculator> {
         title: const Text('BMI Calculator'),
         backgroundColor: Colors.greenAccent,
         actions: [
+          // Clear button
           IconButton(
             icon: const Icon(Icons.clear_all),
             onPressed: _clearFields,
@@ -131,6 +154,7 @@ class _BmiCalculatorState extends State<BmiCalculator> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              // Height input field
               InputContainer(
                 title: 'Height',
                 icon: Icons.height,
@@ -146,6 +170,7 @@ class _BmiCalculatorState extends State<BmiCalculator> {
               ),
               const SizedBox(height: 20),
               
+              // Weight input field
               InputContainer(
                 title: 'Weight',
                 icon: Icons.fitness_center,
@@ -161,6 +186,7 @@ class _BmiCalculatorState extends State<BmiCalculator> {
               ),
               const SizedBox(height: 20),
               
+              // Display error message if any
               if (_errorMessage != null)
                 Container(
                   padding: const EdgeInsets.all(12),
@@ -185,6 +211,7 @@ class _BmiCalculatorState extends State<BmiCalculator> {
               
               const SizedBox(height: 20),
           
+              // Calculate button
               Row(
                 children: [
                   Expanded(
@@ -199,6 +226,7 @@ class _BmiCalculatorState extends State<BmiCalculator> {
               
               const SizedBox(height: 30),
               
+              // Display results if calculated
               if (_bmiResult != null)
                 ResultContainer(
                   bmi: _bmiResult!,
@@ -213,6 +241,7 @@ class _BmiCalculatorState extends State<BmiCalculator> {
   
   @override
   void dispose() {
+    // Clean up controllers to prevent memory leaks
     _heightController.dispose();
     _weightController.dispose();
     super.dispose();

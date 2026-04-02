@@ -7,6 +7,8 @@ import 'package:fitness_app/presentation/widgets/workout_summary_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+/// Screen for tracking outdoor workouts (running, walking, cycling)
+/// Uses GPS to track distance, time, and pace
 class OutdoorWorkoutScreen extends StatelessWidget {
   const OutdoorWorkoutScreen({super.key});
 
@@ -20,6 +22,7 @@ class OutdoorWorkoutScreen extends StatelessWidget {
       ),
       body: Consumer<WorkoutTrackingProvider>(
         builder: (context, provider, child) {
+          // Show loading indicator while initializing GPS
           if (provider.isLoadingLocation && provider.workoutPhase == WorkoutPhase.idle) {
             return const Center(
               child: Column(
@@ -33,6 +36,7 @@ class OutdoorWorkoutScreen extends StatelessWidget {
             );
           }
           
+          // Display appropriate UI based on workout phase
           switch (provider.workoutPhase) {
             case WorkoutPhase.idle:
               return _buildIdlePhase(context, provider);
@@ -46,12 +50,14 @@ class OutdoorWorkoutScreen extends StatelessWidget {
     );
   }
   
+  /// Builds the idle phase UI (before workout starts)
   Widget _buildIdlePhase(BuildContext context, WorkoutTrackingProvider provider) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          // Hero icon
           Container(
             padding: const EdgeInsets.all(40),
             decoration: BoxDecoration(
@@ -70,6 +76,7 @@ class OutdoorWorkoutScreen extends StatelessWidget {
           ),
           const SizedBox(height: 30),
           
+          // Title
           const Text(
             'Track Your Outdoor Workout',
             style: TextStyle(
@@ -80,6 +87,7 @@ class OutdoorWorkoutScreen extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           
+          // Description
           Text(
             'GPS will track your distance and time\n'
             'Perfect for running, walking, or cycling',
@@ -91,6 +99,7 @@ class OutdoorWorkoutScreen extends StatelessWidget {
           ),
           const SizedBox(height: 30),
           
+          // Show error card if there's an error
           if (provider.errorMessage != null)
             LocationPermissionCard(
               errorMessage: provider.errorMessage!,
@@ -99,6 +108,7 @@ class OutdoorWorkoutScreen extends StatelessWidget {
           
           const SizedBox(height: 20),
           
+          // Start button
           CustomButton(
             onTap: () => provider.startWorkout(),
             label: 'Start Run',
@@ -108,12 +118,14 @@ class OutdoorWorkoutScreen extends StatelessWidget {
     );
   }
   
+  /// Builds the active phase UI (workout in progress)
   Widget _buildActivePhase(BuildContext context, WorkoutTrackingProvider provider) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          // Timer display
           Container(
             padding: const EdgeInsets.all(30),
             decoration: BoxDecoration(
@@ -149,6 +161,7 @@ class OutdoorWorkoutScreen extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           
+          // Current position display
           if (provider.currentPosition != null)
             Container(
               padding: const EdgeInsets.all(16),
@@ -185,6 +198,7 @@ class OutdoorWorkoutScreen extends StatelessWidget {
             ),
           const SizedBox(height: 20),
           
+          // Error message if any
           if (provider.errorMessage != null)
             Container(
               padding: const EdgeInsets.all(12),
@@ -209,6 +223,7 @@ class OutdoorWorkoutScreen extends StatelessWidget {
           
           const SizedBox(height: 20),
           
+          // Update location button
           OutlinedButton.icon(
             onPressed: () => provider.updateLocation(),
             icon: const Icon(Icons.refresh),
@@ -219,11 +234,13 @@ class OutdoorWorkoutScreen extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           
+          // Finish button
           CustomButton(
             onTap: provider.canFinish 
               ? () async {
                   await provider.finishWorkout();
                   
+                  // Send notification about completed workout
                   final notificationService = NotificationService();
                   final statsMessage = '${provider.formattedDistance} in ${provider.formattedTime}';
                   
@@ -232,7 +249,7 @@ class OutdoorWorkoutScreen extends StatelessWidget {
                     stats: statsMessage,
                   );
                 } 
-              : null,
+              : null,  // Disable button if can't finish
             label: 'Finish Run',
           ),
         ],
@@ -240,12 +257,14 @@ class OutdoorWorkoutScreen extends StatelessWidget {
     );
   }
   
+  /// Builds the finished phase UI (workout complete)
   Widget _buildFinishedPhase(BuildContext context, WorkoutTrackingProvider provider) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          // Success icon
           Container(
             padding: const EdgeInsets.all(20),
             alignment: Alignment.center,
@@ -257,6 +276,7 @@ class OutdoorWorkoutScreen extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           
+          // Completion message
           const Text(
             'Workout Complete!',
             style: TextStyle(
@@ -267,6 +287,7 @@ class OutdoorWorkoutScreen extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           
+          // Workout summary card
           WorkoutSummaryCard(
             formattedTime: provider.formattedTime,
             formattedDistance: provider.formattedDistance,
@@ -276,6 +297,7 @@ class OutdoorWorkoutScreen extends StatelessWidget {
           
           const SizedBox(height: 20),
           
+          // Route details (start and end coordinates)
           if (provider.startPosition != null && provider.endPosition != null)
             Container(
               padding: const EdgeInsets.all(16),

@@ -2,14 +2,17 @@ import 'package:fitness_app/domain/routine_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+/// Screen displaying user's saved exercises
+/// Shows list of custom exercises added by the user
 class MyExercisesPage extends StatelessWidget {
-  final VoidCallback onAddExercise;
+  final VoidCallback onAddExercise;  // Callback to add a new exercise
   
   const MyExercisesPage({
     super.key,
     required this.onAddExercise,
   });
   
+  /// Returns icon based on muscle group for visual representation
   IconData _getExerciseIcon(String? muscleGroup) {
     switch (muscleGroup) {
       case 'Chest':
@@ -29,6 +32,7 @@ class MyExercisesPage extends StatelessWidget {
     }
   }
   
+  /// Returns color based on muscle group for visual differentiation
   Color _getExerciseColor(String? muscleGroup) {
     switch (muscleGroup) {
       case 'Chest':
@@ -48,6 +52,7 @@ class MyExercisesPage extends StatelessWidget {
     }
   }
   
+  /// Shows confirmation dialog before clearing all exercises
   void _showClearAllDialog(BuildContext context, RoutineProvider provider) {
     showDialog(
       context: context,
@@ -88,11 +93,13 @@ class MyExercisesPage extends StatelessWidget {
         title: const Text('My Saved Exercises'),
         backgroundColor: Colors.greenAccent,
         actions: [
+          // Add exercise button
           IconButton(
             onPressed: onAddExercise,
             icon: const Icon(Icons.add),
             tooltip: 'Add Exercise',
           ),
+          // Clear all button (only shows if there are exercises)
           Consumer<RoutineProvider>(
             builder: (context, provider, child) {
               if (provider.exerciseCount > 0) {
@@ -111,6 +118,7 @@ class MyExercisesPage extends StatelessWidget {
         builder: (context, provider, child) {
           final exercises = provider.savedExercises;
           
+          // Empty state - no saved exercises
           if (exercises.isEmpty) {
             return Center(
               child: Column(
@@ -153,6 +161,7 @@ class MyExercisesPage extends StatelessWidget {
             );
           }
           
+          // List of saved exercises
           return ListView.builder(
             padding: const EdgeInsets.all(16),
             itemCount: exercises.length,
@@ -180,6 +189,7 @@ class MyExercisesPage extends StatelessWidget {
                   padding: const EdgeInsets.all(16.0),
                   child: Row(
                     children: [
+                      // Colored icon container
                       Container(
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
@@ -193,6 +203,7 @@ class MyExercisesPage extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 16),
+                      // Exercise details
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -234,6 +245,7 @@ class MyExercisesPage extends StatelessWidget {
                           ],
                         ),
                       ),
+                      // Delete button
                       IconButton(
                         icon: const Icon(Icons.delete_outline, color: Colors.red),
                         onPressed: () async {

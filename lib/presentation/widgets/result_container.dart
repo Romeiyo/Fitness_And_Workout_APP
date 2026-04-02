@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+/// Widget displaying BMI calculation results
+/// Shows BMI value, category, and personalized advice
 class ResultContainer extends StatelessWidget {
-  final double bmi;
-  final String category;
+  final double bmi;      // Calculated BMI value
+  final String category; // BMI category (Underweight, Normal, etc.)
   
   const ResultContainer({
     super.key,
@@ -10,13 +12,15 @@ class ResultContainer extends StatelessWidget {
     required this.category,
   });
   
+  /// Returns color based on BMI category
   Color _getCategoryColor() {
-    if (bmi < 18.5) return Colors.blue;
-    if (bmi < 25) return Colors.green;
-    if (bmi < 30) return Colors.orange;
-    return Colors.red;
+    if (bmi < 18.5) return Colors.blue;      // Underweight
+    if (bmi < 25) return Colors.green;       // Healthy weight
+    if (bmi < 30) return Colors.orange;      // Overweight
+    return Colors.red;                       // Obese
   }
   
+  /// Returns personalized advice based on BMI category
   String _getAdvice() {
     if (bmi < 18.5) {
       return 'You are underweight. Consider consulting a healthcare provider for a healthy weight gain plan.';
@@ -32,26 +36,26 @@ class ResultContainer extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
+    final categoryColor = _getCategoryColor();
+    
     return Container(
+      // Gradient background matching the category color
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            _getCategoryColor(),
-            _getCategoryColor(),
-          ],
+          colors: [categoryColor, categoryColor],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: _getCategoryColor(),
+            color: categoryColor,
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
         ],
         border: Border.all(
-          color: _getCategoryColor(),
+          color: categoryColor,
           width: 1,
         ),
       ),
@@ -59,6 +63,7 @@ class ResultContainer extends StatelessWidget {
         padding: const EdgeInsets.all(24.0),
         child: Column(
           children: [
+            // "YOUR BMI RESULT" badge
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
@@ -76,6 +81,7 @@ class ResultContainer extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
+            // BMI value (large text)
             Text(
               bmi.toStringAsFixed(1),
               style: const TextStyle(
@@ -92,6 +98,7 @@ class ResultContainer extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 12),
+            // Category badge
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
               decoration: BoxDecoration(
@@ -109,6 +116,7 @@ class ResultContainer extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
+            // Advice container
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(

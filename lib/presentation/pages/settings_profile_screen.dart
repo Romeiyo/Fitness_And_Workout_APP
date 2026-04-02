@@ -4,6 +4,8 @@ import 'package:fitness_app/routes/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+/// Settings and profile screen
+/// Allows users to edit profile information and app preferences
 class SettingsProfileScreen extends StatefulWidget {
   const SettingsProfileScreen({super.key});
 
@@ -12,14 +14,17 @@ class SettingsProfileScreen extends StatefulWidget {
 }
 
 class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
+  // Text controllers for profile fields
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _weightGoalController = TextEditingController();
   
+  // Validation error states
   String? _nameError;
   String? _ageError;
   String? _weightGoalError;
 
+  /// Shows logout confirmation dialog
   void _showLogoutDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -36,7 +41,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
               Navigator.pop(dialogContext);
               final authProvider = Provider.of<AuthProvider>(context, listen: false);
               await authProvider.logout();
-              // AuthGate will handle navigation
+              // Navigate to login screen and remove all previous routes
               if (context.mounted) {
               context.pushRouteAndRemoveUntil(AppRoute.login);
             }
@@ -52,6 +57,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
   @override
   void initState() {
     super.initState();
+    // Load existing profile data after first frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final provider = Provider.of<ProfileProvider>(context, listen: false);
       _nameController.text = provider.name;
@@ -62,6 +68,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
     });
   }
   
+  /// Validates and saves user name
   void _validateAndSaveName() {
     final name = _nameController.text.trim();
     if (name.isEmpty) {
@@ -83,6 +90,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
     }
   }
   
+  /// Validates and saves user age
   void _validateAndSaveAge() {
     final ageText = _ageController.text.trim();
     if (ageText.isEmpty) {
@@ -117,6 +125,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
     }
   }
   
+  /// Validates and saves weight goal
   void _validateAndSaveWeightGoal() {
     final weightText = _weightGoalController.text.trim();
     if (weightText.isEmpty) {
@@ -151,6 +160,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
     }
   }
   
+  /// Shows reset profile confirmation dialog
   void _showResetProfileDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -172,6 +182,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
               await Provider.of<ProfileProvider>(context, listen: false)
                   .resetProfile();
               
+              // Update text fields with default values
               _nameController.text = 'Guest';
               _ageController.clear();
               _weightGoalController.clear();
@@ -192,6 +203,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
     );
   }
   
+  /// Shows reset everything confirmation dialog
   void _showResetEverythingDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -217,6 +229,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
               await Provider.of<ProfileProvider>(context, listen: false)
                   .resetEverything();
               
+              // Update text fields with default values
               _nameController.text = 'Guest';
               _ageController.clear();
               _weightGoalController.clear();
@@ -237,6 +250,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
     );
   }
   
+  /// Formats rest timer duration for display
   String _formatRestTimer(int seconds) {
     if (seconds >= 60) {
       final minutes = seconds ~/ 60;
@@ -251,6 +265,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
   
   @override
   void dispose() {
+    // Clean up controllers
     _nameController.dispose();
     _ageController.dispose();
     _weightGoalController.dispose();
@@ -264,6 +279,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
         title: const Text('Settings & Profile'),
         backgroundColor: Colors.greenAccent,
         actions: [
+          // Logout menu
           PopupMenuButton<String>(
             icon: const Icon(Icons.more_vert),
             onSelected: (value) {
@@ -290,7 +306,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Profile Section
+            // Profile Information Section
             Container(
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -324,6 +340,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                     ),
                     const SizedBox(height: 20),
                     
+                    // Name field
                     TextFormField(
                       controller: _nameController,
                       decoration: InputDecoration(
@@ -341,6 +358,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                     ),
                     const SizedBox(height: 16),
                     
+                    // Age field
                     TextFormField(
                       controller: _ageController,
                       keyboardType: TextInputType.number,
@@ -359,6 +377,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                     ),
                     const SizedBox(height: 16),
                     
+                    // Weight goal field
                     Consumer<ProfileProvider>(
                       builder: (context, provider, child) {
                         return TextFormField(
@@ -387,6 +406,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
             
             const SizedBox(height: 24),
             
+            // App Preferences Section
             Container(
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -420,6 +440,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                     ),
                     const SizedBox(height: 20),
                     
+                    // Weight unit selector
                     const Text(
                       'Weight Unit',
                       style: TextStyle(
@@ -446,7 +467,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                     
                     const SizedBox(height: 24),
                     
-                    // Rest Timer Slider
+                    // Rest timer slider
                     const Text(
                       'Rest Timer Duration',
                       style: TextStyle(
@@ -466,6 +487,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                               divisions: 19, // (300-15)/15 = 19 steps
                               label: _formatRestTimer(provider.restTimer),
                               onChanged: (double value) {
+                                // Preview only while dragging
                                 provider.previewRestTimer(value.toInt());
                               },
                               onChangeEnd: (double value) {
@@ -487,7 +509,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                     
                     const SizedBox(height: 24),
                     
-                    // Notifications Toggle
+                    // Notifications toggle
                     Consumer<ProfileProvider>(
                       builder: (context, provider, child) {
                         return SwitchListTile(
@@ -515,7 +537,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
             
             const SizedBox(height: 24),
             
-            // Reset Buttons Section
+            // Danger Zone - Reset Buttons Section
             Container(
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -550,6 +572,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                     ),
                     const SizedBox(height: 16),
                     
+                    // Reset profile button
                     OutlinedButton.icon(
                       onPressed: () => _showResetProfileDialog(context),
                       icon: const Icon(Icons.person_remove),
@@ -562,6 +585,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                     ),
                     const SizedBox(height: 12),
                     
+                    // Reset everything button
                     ElevatedButton.icon(
                       onPressed: () => _showResetEverythingDialog(context),
                       icon: const Icon(Icons.delete_forever),
@@ -582,4 +606,3 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
     );
   }
 }
-

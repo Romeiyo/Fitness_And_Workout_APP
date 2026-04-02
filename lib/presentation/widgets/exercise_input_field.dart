@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
+/// Reusable widget for exercise input fields
+/// Supports both text input and dropdown selection
 class ExerciseInputField extends StatelessWidget {
+  // Text field properties
   final TextEditingController? controller;
   final String title;
   final IconData icon;
@@ -8,6 +11,8 @@ class ExerciseInputField extends StatelessWidget {
   final String? suffixText;
   final TextInputType keyboardType;
   final String? Function(String?)? validator;
+  
+  // Dropdown properties
   final bool isDropdown;
   final List<DropdownMenuItem<String>>? dropdownItems;
   final String? dropdownValue;
@@ -31,6 +36,7 @@ class ExerciseInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      // Card-like container with shadow
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -48,6 +54,7 @@ class ExerciseInputField extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Header with icon and title
             Row(
               children: [
                 Icon(icon, color: Colors.blue, size: 24),
@@ -63,6 +70,7 @@ class ExerciseInputField extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12),
+            // Input field - either dropdown or text field
             isDropdown 
                 ? DropdownButtonFormField<String>(
                     initialValue: dropdownValue,
@@ -84,7 +92,7 @@ class ExerciseInputField extends StatelessWidget {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      suffixText: suffixText,
+                      suffixText: suffixText,  // Optional unit (e.g., "kg", "sets")
                     ),
                     validator: validator,
                   ),

@@ -5,6 +5,8 @@ import 'package:fitness_app/routes/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+/// Home page displaying workout categories and user greeting
+/// This is the main landing screen after login
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -15,6 +17,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   static const String appName = "Fitness & Workout Tracker";
 
+  /// List of workout categories with their associated assets
+  /// Each category has a name, image path, color, and icon
   final List<Map<String, dynamic>> workoutCategories = [
     {
       'exercise': 'Aerobic Exercises',
@@ -76,6 +80,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        // Gradient background for visual appeal
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
@@ -88,6 +93,7 @@ class _HomePageState extends State<HomePage> {
         title: const Text(appName),
         leading: const Icon(Icons.fitness_center),
         actions: [
+          // Settings button - navigates to profile/settings screen
           IconButton(
             onPressed: () {
               context.pushRoute(AppRoute.settings);
@@ -102,6 +108,7 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // User greeting and profile summary card
             Consumer<ProfileProvider>(
               builder: (context, profileProvider, child) {
                 final authProvider = Provider.of<AuthProvider>(context, listen: false);
@@ -125,6 +132,7 @@ class _HomePageState extends State<HomePage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // Welcome message with user's display name
                       Row(
                         children: [
                           const Icon(Icons.person, color: Colors.white, size: 28),
@@ -141,6 +149,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ],
                       ),
+                      // Display weight goal if set
                       if (profileProvider.weightGoal > 0) ...[
                         const SizedBox(height: 12),
                         Container(
@@ -172,6 +181,7 @@ class _HomePageState extends State<HomePage> {
             ),
             const SizedBox(height: 16),
             
+            // Featured workout of the day banner
             Container(
               height: MediaQuery.of(context).size.height / 5,
               width: MediaQuery.of(context).size.width,
@@ -191,6 +201,7 @@ class _HomePageState extends State<HomePage> {
               ),
               child: Stack(
                 children: [
+                  // Text with stroke effect for readability
                   Center(
                     child: Text(
                       'Featured Workout of the Day',
@@ -211,6 +222,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                     ),
                   ),
+                  // Start button overlay
                   Positioned(
                     bottom: MediaQuery.of(context).size.width * 0.01,
                     right: MediaQuery.of(context).size.width * 0.02,
@@ -223,6 +235,8 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             const SizedBox(height: 5),
+            
+            // Workout categories header with count
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -231,16 +245,19 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
             const SizedBox(height: 20),
+            
+            // Grid of workout categories
             Expanded(
               child: LayoutBuilder(
                 builder: (context, constraints) {
+                  // Responsive grid based on screen width
                   int crossAxisCount;
                   if (constraints.maxWidth >= 900) {
-                    crossAxisCount = 4;
+                    crossAxisCount = 4;  // Large screens: 4 columns
                   } else if (constraints.maxWidth >= 600) {
-                    crossAxisCount = 3;
+                    crossAxisCount = 3;  // Medium screens: 3 columns
                   } else {
-                    crossAxisCount = 2;
+                    crossAxisCount = 2;  // Small screens: 2 columns
                   }
 
                   return GridView.builder(
@@ -249,12 +266,13 @@ class _HomePageState extends State<HomePage> {
                       crossAxisCount: crossAxisCount,
                       crossAxisSpacing: 12,
                       mainAxisSpacing: 12,
-                      childAspectRatio: 0.85,
+                      childAspectRatio: 0.85,  // Taller than wide
                     ),
                     itemBuilder: (context, index) {
                       final category = workoutCategories[index];
                       return GestureDetector(
                         onTap: () {
+                          // Navigate to exercise list for this category
                           context.pushRouteWithArgs(
                             AppRoute.exerciseList, 
                             ExerciseListArgs(

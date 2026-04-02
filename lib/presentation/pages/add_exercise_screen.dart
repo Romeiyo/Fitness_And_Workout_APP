@@ -4,6 +4,8 @@ import 'package:fitness_app/presentation/widgets/custom_button.dart';
 import 'package:fitness_app/presentation/widgets/exercise_input_field.dart';
 import 'package:flutter/material.dart';
 
+/// Screen for adding custom exercises
+/// Users can create their own exercises with name, sets, reps, weight, and muscle group
 class AddExerciseScreen extends StatefulWidget {
   const AddExerciseScreen({super.key});
 
@@ -12,15 +14,19 @@ class AddExerciseScreen extends StatefulWidget {
 }
 
 class _AddExerciseScreenState extends State<AddExerciseScreen> {
+  // Form key for validation
   final _formKey = GlobalKey<FormState>();
   
+  // Text controllers for input fields
   final _nameController = TextEditingController();
   final _setsController = TextEditingController();
   final _repsController = TextEditingController();
   final _weightController = TextEditingController();
   
+  // Selected muscle group
   String? _selectedMuscleGroup;
   
+  // Preview values for volume calculation
   int? _sets;
   int? _reps;
   double? _weight;
@@ -28,11 +34,13 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
   @override
   void initState() {
     super.initState();
+    // Add listeners to update preview in real-time
     _setsController.addListener(_updatePreview);
     _repsController.addListener(_updatePreview);
     _weightController.addListener(_updatePreview);
   }
   
+  /// Updates preview values when input changes
   void _updatePreview() {
     setState(() {
       _sets = int.tryParse(_setsController.text);
@@ -41,9 +49,10 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
     });
   }
   
+  /// Validates and submits the form
   void _submitForm() {
     if (_formKey.currentState!.validate() && _selectedMuscleGroup != null) {
-      // Create Exercise object instead of Map
+      // Create Exercise object with unique ID (timestamp)
       final exercise = Exercise(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         name: _nameController.text.trim(),
@@ -53,8 +62,10 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
         muscleGroup: _selectedMuscleGroup!,
       );
       
+      // Return exercise to previous screen
       context.pop(exercise);
     } else if (_selectedMuscleGroup == null) {
+      // Show error if muscle group not selected
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Please select a muscle group'),
@@ -67,6 +78,7 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
   
   @override
   void dispose() {
+    // Clean up controllers
     _nameController.dispose();
     _setsController.dispose();
     _repsController.dispose();
@@ -89,6 +101,7 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              // Exercise name input
               ExerciseInputField(
                 title: 'Exercise Name',
                 icon: Icons.fitness_center,
@@ -109,6 +122,7 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
               ),
               const SizedBox(height: 20),
               
+              // Sets input
               ExerciseInputField(
                 title: 'Sets',
                 icon: Icons.repeat,
@@ -135,6 +149,7 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
               ),
               const SizedBox(height: 20),
               
+              // Reps input
               ExerciseInputField(
                 title: 'Reps',
                 icon: Icons.trending_up,
@@ -161,6 +176,7 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
               ),
               const SizedBox(height: 20),
               
+              // Weight input
               ExerciseInputField(
                 title: 'Weight (kg)',
                 icon: Icons.fitness_center,
@@ -187,6 +203,7 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
               ),
               const SizedBox(height: 20),
               
+              // Muscle group dropdown
               ExerciseInputField(
                 title: 'Target Muscle Group',
                 icon: Icons.fitness_center,
@@ -215,9 +232,11 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
               ),
               const SizedBox(height: 24),
               
+              // Volume preview (live calculation)
               _buildVolumePreview(),
               const SizedBox(height: 24),
               
+              // Submit button
               CustomButton(
                 onTap: _submitForm,
                 label: 'Save Exercise',
@@ -229,6 +248,8 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
     );
   }
   
+  /// Builds the volume preview widget
+  /// Shows calculated volume (sets × reps × weight) in real-time
   Widget _buildVolumePreview() {
     String volumeText;
     Color textColor;
@@ -236,10 +257,10 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
     if (_sets != null && _reps != null && _weight != null) {
       double volume = _sets! * _reps! * _weight!;
       volumeText = '${_sets!} x ${_reps!} x ${_weight!.toStringAsFixed(1)} = ${volume.toStringAsFixed(1)} kg';
-      textColor = Colors.green;
+      textColor = Colors.green;  // Green when all values are entered
     } else {
       volumeText = '-- x -- x -- = -- kg';
-      textColor = Colors.grey;
+      textColor = Colors.grey;   // Grey when values are incomplete
     }
     
     return Container(

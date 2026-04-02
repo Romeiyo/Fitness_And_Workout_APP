@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+/// Reusable gradient button widget with ripple effect
+/// Used throughout the app for consistent button styling
 class CustomButton extends StatelessWidget {
-  final VoidCallback? onTap;
-  final String label;
+  final VoidCallback? onTap;  // Callback when button is tapped (null disables button)
+  final String label;          // Text displayed on the button
   
   const CustomButton({
     super.key,
@@ -13,14 +15,16 @@ class CustomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
+      width: double.infinity,  // Stretch to full width
       decoration: BoxDecoration(
+        // Gradient from blue to green for visual appeal
         gradient: const LinearGradient(
           colors: [Colors.blueAccent, Colors.greenAccent],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(12),
+        // Shadow for depth effect
         boxShadow: [
           BoxShadow(
             color: Colors.blueAccent,
@@ -30,13 +34,13 @@ class CustomButton extends StatelessWidget {
         ],
       ),
       child: Material(
-        color: Colors.transparent,
+        color: Colors.transparent,  // Make Material transparent to show gradient
         borderRadius: BorderRadius.circular(12),
         child: InkWell(
-          onTap: onTap,
+          onTap: onTap,  // Handle tap (null disables)
           borderRadius: BorderRadius.circular(12),
-          splashColor: Colors.cyan, 
-          highlightColor: Colors.white,
+          splashColor: Colors.cyan,   // Ripple effect color
+          highlightColor: Colors.white, // Highlight when pressed
           child: Container(
             padding: const EdgeInsets.symmetric(vertical: 16),
             child: Row(

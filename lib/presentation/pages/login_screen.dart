@@ -3,6 +3,8 @@ import 'package:fitness_app/routes/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+/// Login screen for user authentication
+/// Provides both login and registration functionality with form validation
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -11,38 +13,48 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  // Form key for validation
   final _formKey = GlobalKey<FormState>();
+  
+  // Text controllers for form inputs
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   
-  bool _isLoginMode = true;
-  bool _obscurePassword = true;
-  bool _obscureConfirmPassword = true;
+  // UI state variables
+  bool _isLoginMode = true;           // Toggle between login and register modes
+  bool _obscurePassword = true;        // Hide password text for security
+  bool _obscureConfirmPassword = true;  // Hide confirm password text
   
   @override
   void dispose() {
+    // Clean up controllers to prevent memory leaks
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
   }
   
+  /// Clears error messages when email field changes
   void _handleEmailChanged(String _) {
     context.read<AuthProvider>().clearError();
   }
   
+  /// Clears error messages when password field changes
   void _handlePasswordChanged(String _) {
     context.read<AuthProvider>().clearError();
   }
   
+  /// Handles form submission for login or registration
   Future<void> _submit() async {
+    // Validate all form fields before proceeding
     if (!_formKey.currentState!.validate()) return;
     
     final authProvider = context.read<AuthProvider>();
     final email = _emailController.text.trim();
     final password = _passwordController.text;
     
+    // Perform login or registration based on current mode
     bool success;
     if (_isLoginMode) {
       success = await authProvider.login(email, password);
@@ -50,17 +62,22 @@ class _LoginScreenState extends State<LoginScreen> {
       success = await authProvider.register(email, password);
     }
     
+    // If successful, clear form and navigate to main app
     if (success && mounted) {
       _emailController.clear();
       _passwordController.clear();
       _confirmPasswordController.clear();
-
+      
+      // Navigate to main screen and remove login screen from history
       context.pushRouteAndRemoveUntil(AppRoute.mainNavigationScreen);
     }
   }
   
+  /// Handles password reset request
   Future<void> _handleForgotPassword() async {
     final email = _emailController.text.trim();
+    
+    // Validate email is entered before sending reset link
     if (email.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -74,6 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final authProvider = context.read<AuthProvider>();
     final success = await authProvider.resetPassword(email);
     
+    // Show success message if reset email was sent
     if (success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -85,35 +103,43 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
   
+  /// Toggles between login and registration modes
   void _toggleMode() {
     setState(() {
       _isLoginMode = !_isLoginMode;
     });
+    // Clear any previous error messages when switching modes
     context.read<AuthProvider>().clearError();
   }
   
+  /// Validates email format
   String? _validateEmail(String? value) {
     if (value == null || value.trim().isEmpty) {
       return 'Email is required';
     }
+    // Basic email validation - must contain @ and .
     if (!value.contains('@') || !value.contains('.')) {
       return 'Please enter a valid email address';
     }
     return null;
   }
   
+  /// Validates password strength
   String? _validatePassword(String? value) {
     if (value == null || value.isEmpty) {
       return 'Password is required';
     }
+    // In registration mode, password must be at least 6 characters
     if (!_isLoginMode && value.length < 6) {
       return 'Password must be at least 6 characters';
     }
     return null;
   }
   
+  /// Validates password confirmation (registration mode only)
   String? _validateConfirmPassword(String? value) {
-    if (_isLoginMode) return null;
+    if (_isLoginMode) return null;  // Only validate in registration mode
+    
     if (value == null || value.isEmpty) {
       return 'Please confirm your password';
     }
@@ -134,6 +160,7 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               const SizedBox(height: 60),
               
+              // App logo/icon
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
@@ -152,6 +179,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 24),
               
+              // Title based on current mode
               Text(
                 _isLoginMode ? 'Welcome Back!' : 'Create Account',
                 style: const TextStyle(
@@ -161,6 +189,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
+              
+              // Subtitle based on current mode
               Text(
                 _isLoginMode 
                   ? 'Sign in to continue your fitness journey' 
@@ -173,6 +203,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 40),
               
+              // Display error message if any
               Consumer<AuthProvider>(
                 builder: (context, authProvider, child) {
                   if (!authProvider.hasError) return const SizedBox.shrink();
@@ -200,10 +231,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
               ),
               
+              // Login/Registration form
               Form(
                 key: _formKey,
                 child: Column(
                   children: [
+                    // Email field
                     TextFormField(
                       controller: _emailController,
                       onChanged: _handleEmailChanged,
@@ -221,6 +254,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const SizedBox(height: 16),
                     
+                    // Password field
                     TextFormField(
                       controller: _passwordController,
                       onChanged: _handlePasswordChanged,
@@ -247,6 +281,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       validator: _validatePassword,
                     ),
                     
+                    // Confirm password field (registration mode only)
                     if (!_isLoginMode) ...[
                       const SizedBox(height: 16),
                       TextFormField(
@@ -277,6 +312,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     
                     const SizedBox(height: 24),
                     
+                    // Submit button
                     Consumer<AuthProvider>(
                       builder: (context, authProvider, child) {
                         return ElevatedButton(
@@ -310,6 +346,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     
                     const SizedBox(height: 16),
                     
+                    // Forgot password link (login mode only)
                     if (_isLoginMode)
                       TextButton(
                         onPressed: _handleForgotPassword,
@@ -321,6 +358,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     
                     const SizedBox(height: 24),
                     
+                    // Toggle between login and registration
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
