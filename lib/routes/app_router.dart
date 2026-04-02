@@ -1,6 +1,8 @@
+import 'package:fitness_app/presentation/pages/auth_gate.dart';
 import 'package:fitness_app/presentation/pages/exercise_detail_screen.dart';
 import 'package:fitness_app/presentation/pages/exercise_list_screen.dart';
 import 'package:fitness_app/presentation/pages/exercise_search_screen.dart';
+import 'package:fitness_app/presentation/pages/login_screen.dart';
 import 'package:fitness_app/presentation/pages/main_navigation_screen.dart';
 import 'package:fitness_app/presentation/pages/settings_profile_screen.dart';
 import 'package:flutter/material.dart';
@@ -52,6 +54,9 @@ class NoArgs {
 }
 
 enum AppRoute<T> {
+  authGate<NoArgs>(),
+  login<NoArgs>(),
+
   home<NoArgs>(),
   mainNavigationScreen<NoArgs>(),
   bmiCalculator<NoArgs>(),
@@ -72,6 +77,8 @@ enum AppRoute<T> {
     return MaterialPageRoute(
       settings: RouteSettings(name: name),
       builder: (context) => switch (this) {
+        AppRoute.authGate => const AuthGate(),
+        AppRoute.login => const LoginScreen(),
         AppRoute.home => const HomePage(),
         AppRoute.mainNavigationScreen => MainNavigationScreen(),
         AppRoute.bmiCalculator => const BmiCalculator(),
@@ -106,6 +113,14 @@ extension AppNavigator on NavigatorState {
   Future<void> pushRouteWithArgs<T>(AppRoute<T> route, T args) {
     return push(route.route(args));
   }
+
+  Future<void> pushRouteAndRemoveUntil<R>(AppRoute<NoArgs> route) {
+    final navigator = this;
+    return navigator.pushAndRemoveUntil(
+      route.route(const NoArgs()),
+      (r) => false,
+    );
+  }
 }
 
 extension AppNavigatorContext on BuildContext {
@@ -119,5 +134,12 @@ extension AppNavigatorContext on BuildContext {
 
   void pop<T extends Object?>([T? result]) {
     Navigator.of(this).pop(result);
+  }
+
+  Future<void> pushRouteAndRemoveUntil<R>(AppRoute<NoArgs> route) {
+    return Navigator.of(this).pushAndRemoveUntil(
+      route.route(const NoArgs()),
+      (route) => false,
+    );
   }
 }

@@ -14,6 +14,11 @@ class AuthProvider extends ChangeNotifier {
   bool get hasError => _errorMessage != null;
   String? get userEmail => _authService.currentUser?.email;
   String? get userId => _authService.currentUser?.uid;
+
+  String get displayName {
+    if (userEmail == null) return 'User';
+    return userEmail!.split('@').first;
+  }
   
   void clearError() {
     _errorMessage = null;
@@ -36,5 +41,56 @@ class AuthProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<bool> login(String email, String password) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+    
+    try {
+      final user = await _authService.login(email, password);
+      return user != null;
+    } catch (e) {
+      _errorMessage = e.toString();
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
   
+  Future<void> logout() async {
+    _isLoading = true;
+    notifyListeners();
+    
+    try {
+      await _authService.logout();
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+  
+  Future<bool> resetPassword(String email) async {
+    if (email.trim().isEmpty) {
+      _errorMessage = 'Please enter your email address first.';
+      notifyListeners();
+      return false;
+    }
+    
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+    
+    try {
+      await _authService.resetPassword(email);
+      return true;
+    } catch (e) {
+      _errorMessage = e.toString();
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
 }
