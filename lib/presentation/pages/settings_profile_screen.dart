@@ -1,4 +1,6 @@
+import 'package:fitness_app/domain/auth_provider.dart';
 import 'package:fitness_app/domain/profile_provider.dart';
+import 'package:fitness_app/routes/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,6 +19,35 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
   String? _nameError;
   String? _ageError;
   String? _weightGoalError;
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Sign Out'),
+        content: const Text('Are you sure you want to sign out? You will need to sign in again to access your dashboard.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(dialogContext);
+              final authProvider = Provider.of<AuthProvider>(context, listen: false);
+              await authProvider.logout();
+              // AuthGate will handle navigation
+              if (context.mounted) {
+              context.pushRouteAndRemoveUntil(AppRoute.login);
+            }
+            },
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text('Sign Out'),
+          ),
+        ],
+      ),
+    );
+  }
   
   @override
   void initState() {
@@ -232,6 +263,27 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
       appBar: AppBar(
         title: const Text('Settings & Profile'),
         backgroundColor: Colors.greenAccent,
+        actions: [
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.more_vert),
+            onSelected: (value) {
+              if (value == 'logout') {
+                _showLogoutDialog(context);
+              }
+            },
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: 'logout',
+                child: Row(
+                  children: [
+                    Icon(Icons.logout, color: Colors.red,),
+                    SizedBox(width: 8),
+                    Text('Sign Out'),
+                  ],
+                )
+              )
+            ])
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),

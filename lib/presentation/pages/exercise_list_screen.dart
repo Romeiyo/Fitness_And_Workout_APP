@@ -1,7 +1,7 @@
 import 'package:fitness_app/domain/routine_provider.dart';
 import 'package:fitness_app/models/exercise.dart';
-import 'package:fitness_app/presentation/pages/exercise_detail_screen.dart';
 import 'package:fitness_app/presentation/widgets/workout_favorite.dart';
+import 'package:fitness_app/routes/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -509,16 +509,14 @@ class ExerciseListScreen extends StatelessWidget {
                           
                           return GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ExerciseDetailScreen(
-                                    exerciseName: exercise.name,
-                                    muscleGroup: exercise.muscleGroup,
-                                    sets: exercise.sets,
-                                    reps: exercise.reps,
-                                    weight: exercise.weight,
-                                  ),
+                              context.pushRouteWithArgs(
+                                AppRoute.exerciseDetail,
+                                ExerciseDetailArgs(
+                                  exerciseName: exercise.name,
+                                  muscleGroup: exercise.muscleGroup,
+                                  sets: exercise.sets,
+                                  reps: exercise.reps,
+                                  weight: exercise.weight,
                                 ),
                               );
                             },

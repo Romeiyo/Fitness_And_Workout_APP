@@ -1,5 +1,5 @@
+import 'package:fitness_app/domain/auth_provider.dart';
 import 'package:fitness_app/domain/profile_provider.dart';
-import 'package:fitness_app/presentation/pages/exercise_list_screen.dart';
 import 'package:fitness_app/presentation/widgets/workout_tile.dart';
 import 'package:fitness_app/routes/app_router.dart';
 import 'package:flutter/material.dart';
@@ -72,31 +72,6 @@ class _HomePageState extends State<HomePage> {
     },
   ];
 
-  // Future<void> _addCustomExercise() async {
-  //   final result = await context.pushRoute<Exercise?>(
-  //     AppRoute.addExercise,
-  //   );
-
-  //   if (result != null && mounted) {
-  //     await context.read<RoutineProvider>().addExercise(result);
-      
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(
-  //         content: Text('${result.name} added successfully!'),
-  //         backgroundColor: Colors.green,
-  //         duration: const Duration(seconds: 2),
-  //       ),
-  //     );
-  //   }
-  // }
-
-  String _getGreeting(String name) {
-    if (name == 'Guest' || name.isEmpty) {
-      return 'Welcome!';
-    }
-    return 'Welcome back, $name!';
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -129,6 +104,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             Consumer<ProfileProvider>(
               builder: (context, profileProvider, child) {
+                final authProvider = Provider.of<AuthProvider>(context, listen: false);
                 return Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
@@ -155,7 +131,7 @@ class _HomePageState extends State<HomePage> {
                           const SizedBox(width: 12),
                           Expanded(
                             child: Text(
-                              _getGreeting(profileProvider.name),
+                              'Welcome, ${authProvider.displayName}!',
                               style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -279,14 +255,12 @@ class _HomePageState extends State<HomePage> {
                       final category = workoutCategories[index];
                       return GestureDetector(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ExerciseListScreen(
-                                categoryName: category['exercise'],
-                                themeColor: category['color'],
-                                iconData: category['icon'],
-                              ),
+                          context.pushRouteWithArgs(
+                            AppRoute.exerciseList, 
+                            ExerciseListArgs(
+                              categoryName: category['exercise'], 
+                              themeColor: category['color'], 
+                              iconData: category['icon'],
                             ),
                           );
                         },

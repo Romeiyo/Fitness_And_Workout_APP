@@ -1,3 +1,4 @@
+import 'package:fitness_app/data/notification_service.dart';
 import 'package:fitness_app/domain/workout_phase.dart';
 import 'package:fitness_app/domain/workout_tracking_provider.dart';
 import 'package:fitness_app/presentation/widgets/custom_button.dart';
@@ -219,7 +220,19 @@ class OutdoorWorkoutScreen extends StatelessWidget {
           const SizedBox(height: 12),
           
           CustomButton(
-            onTap: provider.canFinish ? () => provider.finishWorkout() : null,
+            onTap: provider.canFinish 
+              ? () async {
+                  await provider.finishWorkout();
+                  
+                  final notificationService = NotificationService();
+                  final statsMessage = '${provider.formattedDistance} in ${provider.formattedTime}';
+                  
+                  await notificationService.showWorkoutCompleteAlert(
+                    workoutName: 'Outdoor Run',
+                    stats: statsMessage,
+                  );
+                } 
+              : null,
             label: 'Finish Run',
           ),
         ],
